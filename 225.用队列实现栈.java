@@ -24,16 +24,16 @@ class MyStack {
     }
     
     /** Removes the element on top of the stack and returns that element. */
-    public int pop() {
-        while(q1.size > 1){
+    public int pop(){
+        while(q1.size() > 1) {
             top = q1.remove();
             q2.add(top);
         }
-        q1.remove();
+        int last_num = q1.remove();
         Queue<Integer> temp = q1;
         q1 = q2;
         q2 = temp;
-
+        return last_num; 
     }
     
     /** Get the top element. */
