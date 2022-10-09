@@ -30,14 +30,17 @@ class Solution {
         int res = 0;
         for(int height: heights) {
             int left = 0, right = res;
-            while(left < right) {
+            while(left < right) {//return when left equals to right
                 int mid = left + (right - left) / 2;
                 if(tail[mid] < height) {
                     left = mid + 1;
                 } else {
+                    // because the right bound is open
                     right = mid;
                 }
             }
+            // if height is less then the tailing one, height is the last one, 
+            // else tail array would extend
             tail[left] = height;
             if(right == res) {
                 res++;
