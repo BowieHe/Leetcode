@@ -28,6 +28,9 @@ class Solution {
             //System.out.println(res);
         //}
         //return res;
+        
+
+        // dynamic programming
         int[] dp = new int[nums.length];
         Arrays.fill(dp, 1);
         int res = 0;

@@ -16,6 +16,7 @@ class Solution {
         while(right < s.length()) {
             char c = s.charAt(right);
             if(window.containsKey(c)) {
+                // because the index get might be less than current left, abccb
                 left = Math.max(left, window.get(c) + 1);
             }
             res = Math.max(res, right - left + 1);
