@@ -24,10 +24,15 @@ class Solution {
         int left = 0, right = len - 1;
 
         for(int i = 0; i < len; i++) {
+            // idx1[i] is the mines, if this is bigger than the mines value of nums2, 
+            // then all the value in nums1 larger than nums2
             if(nums1[idx1[i]] > nums2[idx2[left]]) {
                 res[idx2[left]] = nums1[idx1[i]];
                 left++;
             } else {
+                // if minus value in nums1 smaller than the minus value in nums2, 
+                // this value in nums1 is smaller than all the number in nums2
+                // so set this value to compare with the largest value of nums2
                 res[idx2[right]] = nums1[idx1[i]];
                 right--;
             }
