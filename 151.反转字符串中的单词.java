@@ -29,14 +29,6 @@ class Solution {
         return sb.toString();
     }
 
-    String reverse(String s) {
-        char[] ch = s.toCharArray();
-        StringBuilder sb = new StringBuilder();
-        for(int i = ch.length - 1; i >= 0; i--) {
-            sb.append(ch[i]);
-        }
-        return sb.toString();
-    }
 }
 // @lc code=end
 
