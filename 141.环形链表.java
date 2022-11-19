@@ -21,23 +21,19 @@ import java.util.HashMap;
  */
 public class Solution {
     public boolean hasCycle(ListNode head) {
-        //List<Integer> list = new ArrayList<>();
-        /*HashMap<Integer, Integer> map = new HashMap<>();
-        if(head == null) return false;
-        while(head != null){
-            if(head.next == null) return false;
-            map.put(head.val, map.getOrDefault(head.val, 0) + 1);
-            if(map.get(head.val) == 2)return true;
-            head = head.next;
-        }
-        return false;*/
-        Set<ListNode> node = new HashSet<>();
-        while(head != null){
-            if(node.contains(head))return true;
-            else node.add(head);
-            head = head.next;
-        }
+       if(head == null || head.next == null) {
         return false;
+       }
+       ListNode slow = head, fast = head.next;
+       while(slow != fast){
+         if(fast == null || fast.next == null) {
+            return false;
+        }
+           fast = fast.next.next;
+           slow = slow.next; 
+       
+       }
+       return true;
     }
 }
 // @lc code=end
