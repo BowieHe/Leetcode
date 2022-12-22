@@ -19,14 +19,6 @@ class MyQueue {
         reverse = new Stack<Integer>();
     }
     
-    private void shift() {
-        if (reverse.isEmpty()) {
-            while (!stack.isEmpty()) {
-                reverse.push(stack.pop());
-            }
-        }
-    }
-
     /** Push element x to the back of queue. */
     public void push(int x) {
         stack.push(x);
@@ -34,18 +26,18 @@ class MyQueue {
     
     /** Removes the element from in front of queue and returns that element. */
     public int pop() {
-        shift();
-        if(!reverse.isEmpty())
-            return reverse.pop();
-        throw new RuntimeException();
+        peek();
+        return reverse.pop();
     }
     
     /** Get the front element. */
     public int peek() {
-        shift();
-        if(!reverse.isEmpty())
-            return reverse.peek();
-        throw new RuntimeException();
+        if(reverse.isEmpty()) {
+            while(!stack.isEmpty()) {
+                reverse.push(stack.pop());
+            }
+        }
+        return reverse.peek();
     }
     
     /** Returns whether the queue is empty. */
