@@ -21,23 +21,18 @@ import javax.swing.tree.TreeNode;
 class Solution {
     public TreeNode invertTree(TreeNode root) {
         if(root == null)return null;
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
-        while(!queue.isEmpty()){
-            TreeNode cur = queue.poll();
-            if(cur.right != null || cur.left != null){
-                TreeNode temp = cur.left;
-                cur.left = cur.right;
-                cur.right = temp;
-                if(cur.right != null)
-                    queue.offer(cur.right);
-                if(cur.left != null)
-                    queue.offer(cur.left);
-            }
-            
-        }
+        
+        invertTree(root.left);
+        invertTree(root.right);
+
+        TreeNode temp = root.right;
+        root.right = root.left;
+        root.left = temp;
+
         return root;
     }
+
+
 }
 // @lc code=end
 
