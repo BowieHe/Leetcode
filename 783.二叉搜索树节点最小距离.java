@@ -21,8 +21,27 @@
  * }
  */
 class Solution {
+    int minVal;
+    TreeNode prevVal;
     public int minDiffInBST(TreeNode root) {
+        minVal = Integer.MAX_VALUE;
+        traverse(root);
+        return minVal;
+    }
 
+    void traverse(TreeNode root) {
+        if(root == null) {
+            return;
+        }
+
+        traverse(root.left);
+
+        if(prevVal != null) {
+            minVal = Math.min(minVal, root.val - prevVal.val);
+        }
+        prevVal = root;
+
+        traverse(root.right);
     }
 }
 // @lc code=end
