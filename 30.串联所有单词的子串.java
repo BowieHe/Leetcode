@@ -3,7 +3,7 @@
  *
  * [30] 串联所有单词的子串
  */
-<<<<<<< HEAD
+
 // @lc code=start
 
 import java.util.ArrayList;
@@ -34,14 +34,6 @@ class Solution {
     }
 }
 
-=======
 
-// @lc code=start
-class Solution {
-    public List<Integer> findSubstring(String s, String[] words) {
-
-    }
-}
->>>>>>> add solution
 // @lc code=end
 
