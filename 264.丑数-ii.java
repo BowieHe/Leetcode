@@ -5,32 +5,34 @@
  */
 
 // @lc code=start
+
+import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
+
 class Solution {
     public int nthUglyNumber(int n) {
-        int p2 = 1, p3 = 1, p5 = 1;
+        int[] num = new int[] { 2, 3, 5 };
+        Set<Long> set = new HashSet<>();
+        Queue<Long> pq = new PriorityQueue<>();
+        set.add(1L);
+        pq.add(1L);
+        for (int i = 1; i < n; i++) {
+            long x = pq.poll();
 
-        int product2 = 1, product3 = 1, product5 = 1;
-        int[] ugly = new int[n + 1];
-        int p = 1;
-        while(p <= n) {
-            int min = Math.min(product5, Math.min(product3, product2));
-            ugly[p] = min;
-            p++;
-            if(min == product2) {
-                product2 = 2 * ugly[p2];
-                p2++;
-            } 
-            if(min == product3) {
-                product3 = 3 * ugly[p3];
-                p3++;
-            } 
-            if(min == product5) {
-                product5 = 5 * ugly[p5];
-                p5++;
+            for (int nu : num) {
+                long t = x * nu;
+                if (!set.contains(t)) {
+                    set.add(t);
+                    pq.add(t);
+                }
             }
+
         }
-        return ugly[n];
+        long res = pq.poll();
+        return (int)res;
     }
+
 }
 // @lc code=end
-

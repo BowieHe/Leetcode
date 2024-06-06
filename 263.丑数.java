@@ -6,25 +6,21 @@
 
 // @lc code=start
 class Solution {
-    public boolean isUgly(int num) {
-        if(num == 0)return false;
-        if(num == 1)return true;
+    public boolean isUgly(int n) {
 
-        int[] list = new int[]{2,3,5};
-        for(int i = 0; i < 3 ;){
-            if(num == 1 && i == 2)
-                break;
-            if(num % list[i] == 0){
-                num /= list[i];
-                continue;
-            }   
-            else{
-                i++;
-                if(i == 3)return false;
+        if (n == 0)
+            return false;
+        int[] ugly = new int[] { 5, 3, 2 };
+        for (int u : ugly) {
+
+            while (n % u == 0) {
+                n = n / u;
+                // System.out.println(n + " " + u);
             }
         }
-        return true;
+
+        return n == 1;
     }
+
 }
 // @lc code=end
-
