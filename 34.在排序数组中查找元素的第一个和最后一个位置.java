@@ -7,47 +7,32 @@
 // @lc code=start
 class Solution {
     public int[] searchRange(int[] nums, int target) {
-        if(nums.length == 0) {
-            return new int[]{-1 ,-1};
+        if (nums.length == 0) {
+            return new int[] { -1, -1 };
         }
-        return new int[]{leftBound(nums, target), rightBound(nums, target)};
+        int left = leftBound(nums, target, 0);
+        if (nums[left] != target) {
+            return new int[] { -1, -1 };
+        }
+        int right = leftBound(nums, target + 1, left);
+        System.out.println("left:" + left + " right: " + right);
+        return new int[] { left, nums[right] == target ? right : right - 1 };
     }
 
-    public int leftBound(int[] nums, int target) {
-        int left = 0, right = nums.length - 1;
-        while(left <= right) {
+    public int leftBound(int[] nums, int k, int left) {
+        int right = nums.length - 1;
+
+        while (left < right) {
             int mid = left + (right - left) / 2;
-            if(nums[mid] < target) {
+            if (nums[mid] < k) {
                 left = mid + 1;
-            } else if(nums[mid] > target) {
-                right = mid - 1;
-            } else if(nums[mid] == target) {
-                right = mid - 1;
+            } else {
+                right = mid;
             }
         }
-        if(left >= nums.length || nums[left] != target) {
-            return -1;
-        }
+
         return left;
-    }
 
-    public int rightBound(int[] nums, int target) {
-        int left = 0, right = nums.length - 1;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-            if(nums[mid] < target) {
-                left = mid + 1;
-            } else if(nums[mid] > target) {
-                right = mid - 1;
-            } else if(nums[mid] == target) {
-                left = mid + 1;
-            }
-        }
-        if(right < 0 || nums[right] != target) {
-            return -1;
-        }
-        return right;
     }
 }
 // @lc code=end
-

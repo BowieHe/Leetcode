@@ -10,46 +10,30 @@ class Solution {
         return leftBound(k + 1) - leftBound(k);
     }
 
-    int getZeroNumber(int n) {
-        int res = 0;
-        for(int d = n; d/ 5 > 0; d/= 5) {
-            res += d / 5;
-        }
-        return res;
-    } 
-
     int leftBound(int k) {
-        int left = 0, right = 5 * k;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-            if(getZeroNumber(mid) < k) {
+        long left = 0, right = Long.MAX_VALUE;
+
+        while (left < right) {
+            long mid = left + (right - left) / 2;
+            long zero = zeroNum(mid);
+            if (zero < k) {
                 left = mid + 1;
-            } else if(getZeroNumber(mid) > k) {
-                right = mid - 1;
-            } else if(getZeroNumber(mid) == k) {
-                right = mid - 1;
+            } else {
+                right = mid;
             }
+            // System.out.println(mid);
         }
-        System.out.println(left);
-        return left;
+
+        return (int) left;
     }
 
-     int rightBound(int k) {
-        int left = 0, right = 5 * k;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-            if(getZeroNumber(mid) < k) {
-                left = mid + 1;
-            } else if(getZeroNumber(mid) > k) {
-                right = mid - 1;
-            } else if(getZeroNumber(mid) == k) {
-                left = mid + 1;
-            }
+    long zeroNum(long n) {
+        long t = 0;
+        long temp = n;
+        while (temp > 0) {
+            t += temp / 5;
+            temp /= 5;
         }
-
-        System.out.println(left);
-        return left;
+        return t;
     }
 }
-// @lc code=end
-
