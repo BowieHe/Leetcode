@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.List;
 
 /*
  * @lc app=leetcode.cn id=354 lang=java
@@ -14,40 +15,40 @@ class Solution {
     public int maxEnvelopes(int[][] envelopes) {
         Arrays.sort(envelopes, new Comparator<int[]>() {
             public int compare(int[] a, int[] b) {
-                return a[0] == b[0]? b[1] - a[1] : a[0] - b[0];
-            }
-        });
-        int n = envelopes.length;
-        int[] height = new int[n];
-        for(int i = 0; i < n; i++) {
-            height[i] = envelopes[i][1];
-        }
-        return lengthOfLIS(height);
-    }
-
-    public int lengthOfLIS(int[] heights) {
-        int[] tail = new int[heights.length];
-        int res = 0;
-        for(int height: heights) {
-            int left = 0, right = res;
-            while(left < right) {//return when left equals to right
-                int mid = left + (right - left) / 2;
-                if(tail[mid] < height) {
-                    left = mid + 1;
+                if (a[0] != b[0]) {
+                    return a[0] - b[0];
                 } else {
-                    // because the right bound is open
-                    right = mid;
+                    return b[1] - a[1];
                 }
             }
-            // if height is less then the tailing one, height is the last one, 
-            // else tail array would extend
-            tail[left] = height;
-            if(right == res) {
-                res++;
+        });
+
+        List<Integer> res = new ArrayList<>();
+        res.add(envelopes[0][1]);
+        for (int i = 0; i < envelopes.length; i++) {
+            int num = envelopes[i][1];
+            if (num > res.get(res.size() - 1)) {
+                res.add(num);
+            } else {
+                int index = bs(res, num);
+                res.set(index, num);
             }
         }
-        return res;
+
+        return res.size();
+    }
+
+    public int bs(List<Integer> res, int num) {
+        int left = 0, right = res.size() - 1;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (res.get(mid) < num) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
     }
 }
 // @lc code=end
-
