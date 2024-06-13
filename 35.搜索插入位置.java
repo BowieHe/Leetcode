@@ -7,19 +7,20 @@
 // @lc code=start
 class Solution {
     public int searchInsert(int[] nums, int target) {
+        int ans = nums.length;
+        
         int left = 0, right = nums.length - 1;
-        int mid = (left + right) / 2;
-        while(left <= right){
-            mid = (left + right) / 2;
-            if(target == nums[mid]){
-                return mid;
-            }else if(target > nums[mid]){
+        while(left <= right) {
+            int mid = left + ((right - left) >> 1);
+            if(nums[mid] < target) {
                 left = mid + 1;
-            }else{
+            } else {
                 right = mid - 1;
+                ans = mid;
             }
+            System.out.println(ans);
         }
-        return left;
+        return ans;
     }
 }
 // @lc code=end
