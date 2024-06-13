@@ -12,36 +12,57 @@ import java.util.Map;
 
 // @lc code=start
 class Solution {
-    public List<Integer> findAnagrams(String s, String p) {
-      Map<Character, Integer> window = new HashMap<>();
-      Map<Character, Integer> need = new HashMap<>();
+  public List<Integer> findAnagrams(String s, String p) {
+    List<Integer> res = new ArrayList<>();
+    int sLen = s.length(), pLen = p.length();
 
-      if(s.length() < p.length()) {
-        return new ArrayList<>();
-      }
-
-      List<Integer> res = new ArrayList<>();
-      int[] sCount = new int[26];
-      int[] pCount = new int[26];
-      for(int i = 0; i < p.length(); i++) {
-        ++sCount[s.charAt(i) - 'a'];
-        ++pCount[p.charAt(i) - 'a'];
-      }
-
-      if(Arrays.equals(sCount, pCount)) {
-        res.add(0);
-      }
-
-      for(int i = 0; i < s.length() - p.length(); i++) {
-        ++sCount[s.charAt(i + p.length()) - 'a'];
-        --sCount[s.charAt(i) - 'a'];
-        if(Arrays.equals(sCount, pCount)) {
-            res.add(i + 1);
-        }
-      }
+    if (sLen < pLen) {
       return res;
     }
-    
+
+    int[] count = new int[26];
+    for (int i = 0; i < p.length(); i++) {
+      count[s.charAt(i) - 'a']++;
+      count[p.charAt(i) - 'a']--;
+    }
+
+    int dif = 0;
+    for (int i = 0; i < 26; i++) {
+      if (count[i] != 0) {
+        dif++;
+      }
+    }
+
+    if (dif == 0) {
+      res.add(0);
+    }
+
+    int left = 0;
+    while (left + pLen < sLen) {
+      // delete the left one
+      if (count[s.charAt(left) - 'a'] == 1) { // old one is different, return to 0
+        dif--;
+      } else if (count[s.charAt(left) - 'a'] == 0) {// old one is included, add
+        dif++;
+      }
+      count[s.charAt(left) - 'a']--;
+
+      // add the right one, new one
+      if (count[s.charAt(left + pLen) - 'a'] == -1) {// the new added in empty, add one
+        dif--;
+      } else if (count[s.charAt(left + pLen) - 'a'] == 0) {// the new added has been matched,
+        dif++;
+      }
+      count[s.charAt(left + pLen) - 'a']++; // add the new one
+
+      if (dif == 0) {
+        res.add(left + 1);
+      }
+
+      left++;
+    }
+
+    return res;
+  }
 }
 // @lc code=end
-
