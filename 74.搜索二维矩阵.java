@@ -7,27 +7,43 @@
 // @lc code=start
 class Solution {
     public boolean searchMatrix(int[][] matrix, int target) {
-        int weight = matrix[0].length, height = matrix.length;
-        int left = 0, right = weight * height - 1;
-        while(left <= right) {
-            int mid = left + (right - left) / 2;
-            if(get(mid, matrix) > target) {
+
+        int verLine = RowSearch(matrix, target);
+
+        if(verLine < 0) return false;
+
+        return colSearch(matrix[verLine], target);
+    }
+
+    public int RowSearch(int[][] num, int target) {
+        int left = -1, right = num.length - 1;
+        while (left < right) {
+            int mid = left + (right - left + 1) / 2;
+            if (num[mid][0] <= target) {
+                left = mid;
+            } else {
                 right = mid - 1;
-            } else if(get(mid, matrix) < target) {
-                left = mid + 1;
-            } else if(get(mid, matrix) == target) {
-                return true;
             }
         }
+
+        return left;
+    }
+
+    public boolean colSearch(int[] row, int target) {
+        int left = 0, right = row.length - 1;
+        while(left <= right) {
+            int mid = left + (right - left) / 2;
+            if(row[mid] == target) {
+                return true;
+            } else if(row[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
         return false;
     }
 
-    public int get(int num, int[][] matrix) {
-        int turn = matrix[0].length;
-        int weight = num / turn;
-        int height = num % turn;
-        return matrix[weight][height];
-    }
 }
 // @lc code=end
-
