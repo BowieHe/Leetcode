@@ -10,40 +10,88 @@ import java.util.Map;
 // @lc code=start
 class Solution {
     public String minWindow(String s, String t) {
-        Map<Character, Integer> need = new HashMap<>();
-        Map<Character, Integer> windows = new HashMap<>();
-        for(char c: t.toCharArray()) need.put(c, need.getOrDefault(c, 0) + 1);
+        String res = "";
+        int indexL = -1, indexR = s.length();
+        int lens = s.length(), lent = t.length();
+        if (lent > lens) {
+            return res;
+        }
 
-        Integer left = 0, right = 0, valid = 0;
-        Integer start = 0, len = Integer.MAX_VALUE;
-        while(right < s.length()) {
-            char cur = s.charAt(right);
-            right++;
-            if(need.containsKey(cur)) {
-                windows.put(cur, windows.getOrDefault(cur, 0) + 1);
-                if(windows.get(cur).equals(need.get(cur))) {
-                    valid++;
-                }
-            }
-            while(valid.equals(need.keySet().size())) {
-                if(right - left < len) {
-                    start = left;
-                    len = right - left;
-                    System.out.println(String.format("%d == %d", start, len));
-                    System.out.println(s.substring(start, start + len));
-                }
-                char rm = s.charAt(left);
-                left++;
-                if(need.containsKey(rm)) {
-                    if(windows.get(rm).equals(need.get(rm))) {
-                        valid--;
-                    }
-                    windows.put(rm, windows.get(rm) - 1);
-                }
+        HashMap<Character, Integer> need = new HashMap<>();
+
+        for (int i = 0; i < lent; i++) {
+            need.put(t.charAt(i), need.getOrDefault(t.charAt(i), 0) + 1);
+        }
+
+        for (int i = 0; i < lent; i++) {
+            if (need.keySet().contains(s.charAt(i))) {
+                need.put(s.charAt(i), need.getOrDefault(s.charAt(i), 0) - 1);
             }
         }
-        return len == Integer.MAX_VALUE? "": s.substring(start, start + len);
+
+        if (containsAll(need)) {
+            return s.substring(0, t.length());
+        }
+
+        int left = 0;
+        for (int i = lent; i < lens; i++) {
+            char rChar = s.charAt(i);
+            if (!need.keySet().contains(rChar)) {
+                continue;
+            }
+
+            need.put(rChar, need.getOrDefault(rChar, 0) - 1);
+
+            if (containsAll(need)) {
+                while (left <= i) {
+                    if (!need.keySet().contains(s.charAt(left))) {
+                        left++;
+                        continue;
+                    }
+                    if ((i - left) < (indexR - indexL)) {
+                        indexR = i;
+                        indexL = left;
+                        res = s.substring(indexL, indexR + 1);
+                    }
+                    need.put(s.charAt(left), need.getOrDefault(s.charAt(left), 0) + 1);
+                    left++;
+                    if (!containsAll(need)) {
+                        break;
+                    }
+                }
+
+            }
+            // while (left < i) {
+
+            // if (!need.keySet().contains(s.charAt(left))) {
+            // left++;
+            // continue;
+            // }
+
+            // if (!containsAll(need)) {
+            // break;
+            // }
+
+            // if ((i - left) <= (indexR - indexL)) {
+            // indexR = i;
+            // indexL = left;
+            // res = s.substring(indexL, indexR + 1);
+            // }
+            // need.put(s.charAt(left), need.getOrDefault(s.charAt(left), 0) + 1);
+            // left++;
+            // }
+        }
+
+        return res;
+    }
+
+    public boolean containsAll(HashMap<Character, Integer> need) {
+        for (Map.Entry<Character, Integer> e : need.entrySet()) {
+            if (e.getValue() > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 // @lc code=end
-
