@@ -10,47 +10,48 @@ import java.util.Map;
 // @lc code=start
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        int left = 0, right = 0;
-        Map<Character, Integer> window = new HashMap<>();
-        Map<Character, Integer> need = new HashMap<>();
-        for(char a: s1.toCharArray()) need.put(a, need.getOrDefault(a, 0) + 1);
-        int valid = 0;
-        if(s1.length() > s2.length()) return false;
-        while(right < s2.length()) {
-            char cur = s2.charAt(right);
-            right++;
-            if(need.containsKey(cur)) {
-                int needCount = window.getOrDefault(cur, 0);
-                window.put(cur, needCount + 1);
-                if(needCount + 1 == need.get(cur)) {
-                    valid++;
-                }
-                
-            }
-            while(right - left >= s1.length()) {
-                System.out.print(valid);
+        int len1 = s1.length(), len2 = s2.length();
+        if (len1 > len2) {
+            return false;
+        }
+        int count[] = new int[26];
+        for (int i = 0; i < len1; i++) {
+            count[s1.charAt(i) - 'a']--;
+            count[s2.charAt(i) - 'a']++;
+        }
 
-                System.out.print("===");
-                System.out.println(left);
-                if(valid == need.keySet().size()) return true;
-                char rm = s2.charAt(left);
-                left++;
-                if(window.containsKey(rm)) {
-                    int val = window.get(rm);
-                    if(val == 1) {
-                        window.remove(rm);
-                    } else {
-                        window.put(rm, val - 1);
-                    }
-                    if(val == need.get(rm)) {
-                        valid--;
-                    }
-                    
-                }
+        int diff = 0;
+        for (int i = 0; i < 26; i++) {
+            if (count[i] != 0) {
+                diff++;
             }
         }
+
+        if (diff == 0) {
+            return true;
+        }
+        for (int i = 0; i < len2 - len1; i++) {
+            if (count[s2.charAt(i) - 'a'] == 1) {
+                diff--;
+            } else if (count[s2.charAt(i) - 'a'] == 0) {
+                diff++;
+            }
+            count[s2.charAt(i) - 'a']--;
+
+            if (count[s2.charAt(i + len1) - 'a'] == -1) {
+                diff--;
+            } else if (count[s2.charAt(i + len1) - 'a'] == 0) {
+                diff++;
+            }
+            count[s2.charAt(i + len1) - 'a']++;
+
+            if (diff == 0) {
+                return true;
+            }
+
+        }
+
         return false;
     }
 }
 // @lc code=end
-
