@@ -9,33 +9,34 @@ import java.util.Arrays;
 // @lc code=start
 class Solution {
     public int threeSumClosest(int[] nums, int target) {
-
-        if(nums.length < 3) {
+        if (nums.length < 3) {
             return 0;
         }
         Arrays.sort(nums);
-        int index = 0;
-        int res = Integer.MAX_VALUE;
-        while(index < nums.length - 2) {
-            int left = index + 1;
-            int right = nums.length - 1;
-            while(left < right) {
-                int sum = nums[index] + nums[left] + nums[right];
-                 if(target == sum) {
-                    return sum;
-                 } else if(Math.abs(target - sum) < Math.abs(target - res)) {
-                    res = sum;
-                } 
-                if(sum < target) {
-                    left++;
+        int res = Integer.MIN_VALUE;
+        int minG = Integer.MAX_VALUE;
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            int left = i + 1, right = nums.length - 1;
+            while (left < right) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum < target) {
+                    left += 1;
+                } else if (sum == target) {
+                    return target;
                 } else {
-                    right--;
+                    right -= 1;
                 }
+                int abv = Math.abs(sum - target);
+                if (abv < minG) {
+                    minG = abv;
+                    res = sum;
+                }
+
             }
-            index++;
         }
+
         return res;
     }
 }
 // @lc code=end
-
