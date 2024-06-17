@@ -10,20 +10,26 @@ import java.util.Map;
 // @lc code=start
 class Solution {
     public int removeDuplicates(int[] nums) {
-        Map<Integer, Integer> appearance = new HashMap<>();
-        int slow = 0, fast = 1;
-        appearance.put(nums[0], 1);
-        while(fast < nums.length) {
-            int count = appearance.getOrDefault(nums[fast], 0);
-            if(count < 2) {
-                appearance.put(nums[fast],count + 1);
-                slow++;
-                nums[slow] = nums[fast];    
+        int dup = 0, offset = 0;
+        int curNum = Integer.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] > curNum) {
+                dup = 0;
+                curNum = nums[i];
             }
-            fast++;
-        } 
-        return slow + 1;
+            dup++;
+            if (dup > 2) {
+                offset++;
+            }
+
+            if (offset > 0) {
+                nums[i - offset] = nums[i];
+            }
+        }
+
+        return nums.length - offset;
+
     }
 }
 // @lc code=end
-
