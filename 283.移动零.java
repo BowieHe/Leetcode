@@ -9,17 +9,18 @@ import java.util.Arrays;
 // @lc code=start
 class Solution {
     public void moveZeroes(int[] nums) {
-        int change = 0;
-        for(int cur = 0; cur < nums.length; cur++){
-            if(nums[cur] != 0){
-                nums[change] = nums[cur];
-                change ++;
+        int zero = 0;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] == 0) {
+                zero++;
+            } else {
+                nums[i - zero] = nums[i];
             }
         }
-        for(int i = nums.length - 1; i >= change; i--){
-            nums[i] = 0;
+
+        for (int j = nums.length - zero; j < nums.length; j++) {
+            nums[j] = 0;
         }
     }
 }
 // @lc code=end
-
