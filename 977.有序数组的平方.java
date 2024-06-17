@@ -7,22 +7,22 @@
 // @lc code=start
 class Solution {
     public int[] sortedSquares(int[] nums) {
-        int left = 0, right = nums.length - 1;
-        int len = nums.length - 1, i = 0;
         int[] res = new int[nums.length];
-        while(left <= right) {
-            if(Math.abs(nums[left]) < Math.abs(nums[right]) ) {
-                res[len - i] = nums[right] * nums[right];
+        int index = nums.length - 1;
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            if (Math.abs(nums[left]) < Math.abs(nums[right])) {
+                res[index] = nums[right] * nums[right];
                 right--;
             } else {
-                res[len - i] = nums[left] * nums[left];
+                res[index] = nums[left] * nums[left];
                 left++;
             }
-            i++;
+            index--;
         }
 
         return res;
+
     }
 }
 // @lc code=end
-
