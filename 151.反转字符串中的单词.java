@@ -7,28 +7,30 @@
 // @lc code=start
 class Solution {
     public String reverseWords(String s) {
-        s = s.stripLeading();
-        s = s.stripTrailing();
-        String[] subS = s.split(" ");
-        for(String su: subS) {
-            System.out.print(su);
-            System.out.println(su.length());
-        }
         StringBuilder sb = new StringBuilder();
-        for(int i = subS.length - 1; i >= 0; i--) {
-            String sub = subS[i];
-            if(sub.length() == 0) {
-                continue;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (c != ' ') {
+                sb.append(c);
+            } else if (sb.length() > 0 && sb.charAt(sb.length() - 1) != ' ') {
+                sb.append(' ');
             }
-            // String reSub = reverse(sub);
-            sb.append(sub);
-            if(i > 0) {
-                sb.append(" ");
-            }
-        } 
-        return sb.toString();
+        }
+        if (sb.charAt(sb.length() - 1) == ' ') {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+
+        String newStr = sb.toString();
+        String[] strs = newStr.split(" ");
+        StringBuilder nsb = new StringBuilder();
+        for (int i = strs.length - 1; i >= 0; i--) {
+            nsb.append(strs[i]);
+            nsb.append(" ");
+        }
+
+        nsb.deleteCharAt(nsb.length() - 1);
+        return nsb.toString();
     }
 
 }
 // @lc code=end
-
