@@ -13,86 +13,50 @@ class Solution {
     public List<List<Integer>> fourSum(int[] nums, int target) {
         Arrays.sort(nums);
         int n = nums.length;
-        List<List<Integer>> res = new ArrayList<List<Integer>>();
-        if(nums == null || n < 4) {
-            return res;
-        }
-        for(int i = 0; i < n -3; i++) {
-            
-            System.out.println("current turn" + i);
 
-            if(((long)nums[i] + nums[i + 1] + nums[i + 2] + nums[i + 3]) > target) {
+        List<List<Integer>> res = new ArrayList<>();
 
-                System.out.println("skip because i is too large");
-                continue;
-            } else if(((long)nums[i] + nums[n - 1] + nums[n - 2] + nums[n - 3]) < target) {
+        for (int i = 1; i < n - 2; i++) {
+            // if (i > 1 && nums[i] == nums[i - 1]) {
+            // continue;
+            // }
+            // System.out.println("process i:" + i + " and value:" + nums[i]);
+            for (int j = i + 1; j < n - 1; j++) {
+                // if (i > 1 && nums[i] == nums[i - 1] && j > (i + 1) && nums[j] == nums[j - 1])
+                // {
+                // continue;
+                // }
+                // System.out.println("process j:" + j + " and value:" + nums[j]);
+                int left = 0, right = n - 1;
+                while (left < i && right > j) {
+                    if (left > 0 && nums[left] == nums[left - 1]) {
+                        left++;
+                        continue;
+                    } else if (right < n - 1 && nums[right] == nums[right + 1]) {
+                        right--;
+                        continue;
+                    }
+                    long sum = (long) nums[left] + nums[i] + nums[j] + nums[right];
+                    if (sum < target) {
+                        left++;
+                    } else if (sum > target) {
+                        right--;
+                    } else {
+                        List<Integer> r = Arrays.asList(nums[left], nums[i], nums[j], nums[right]);
+                        if (!res.contains(r)) {
+                            res.add(r);
+                        }
 
-                System.out.println(nums[i] + nums[n - 1] + nums[n - 2] + nums[n - 3]);
-                System.out.println("skip because i is too small");
-                continue;
-            } 
-            
-             if(i > 0 && nums[i] == nums[i - 1]) {
-                System.out.println("skip i");
-                continue;
-            }
-            for(int j = i + 1; j < n - 2; j++) {
-                if(nums[i] + nums[j] + nums[j + 1] + nums[j + 2] > target) {
-                    System.out.println("skip because j is too large");
-                    continue;
-                } else if(nums[i] + nums[j] + nums[n - 1] + nums[n -2] < target) {
-
-                    System.out.println("skip because j is too small");
-                    continue;
-                }
-                System.out.println("currentJ"+ j);
-                if(j > i + 1 && nums[j] == nums[j - 1]) {
-
-                    // System.out.println("test run");
-                    continue;
-                }
-                int lo = j + 1, hi = n - 1;
-                while(lo < hi) {
-                    System.out.println("current lo" + lo + "hi :" + hi);
-                    int sum = nums[i] + nums[j] + nums[lo] + nums[hi];
-                    if(sum < target) {
-                        lo = removeDup(true, lo, nums);
-                        lo++;
-                    } else if(sum > target) {
-                        hi = removeDup(false, hi, nums);
-                        hi--;
-                    } else { // sum == target   
-                        System.out.println(i + " " + j + " " + lo + " " + hi);
-                        List<Integer> curRes = new ArrayList<>();
-                        curRes.add(nums[i]);
-                        curRes.add(nums[j]);
-                        curRes.add(nums[lo]);
-                        curRes.add(nums[hi]);
-                        res.add(curRes);
-                        lo = removeDup(true, lo, nums);
-                        hi = removeDup(false, hi, nums);
-                        lo++;
-                        hi--;
+                        right--;
+                        left++;
                     }
                 }
             }
-           
         }
+
         return res;
+
     }
 
-    Integer removeDup(Boolean incr, int start, int[] nums) {
-        if(incr) {
-            while(start < (nums.length - 1) && nums[start] == nums[start + 1]) {
-                start++;
-            }
-        } else {
-            while(start > 1 && nums[start] == nums[start - 1]) {
-                start--;
-            }
-        }
-        return start;
-    }
 }
 // @lc code=end
-
