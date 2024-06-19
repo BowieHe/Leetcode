@@ -11,22 +11,35 @@ import java.util.List;
 // @lc code=start
 class Solution {
     public int[][] intervalIntersection(int[][] firstList, int[][] secondList) {
-        List<int[]> res = new LinkedList<>();
-        int i = 0, j = 0;
-        while(i < firstList.length && j < secondList.length) {
-            int a1 = firstList[i][0], a2 = firstList[i][1];
-            int b1 = secondList[j][0], b2 = secondList[j][1];
-            if(b2 >= a1 && a2 >= b1) {
-                res.add(new int[]{Math.max(a1, b1), Math.min(a2, b2)});
-            }
-            if(b2 < a2) {
-                j++;
+        List<int[]> res = new ArrayList<>();
+        int first = 0, second = 0;
+        while (first < firstList.length && second < secondList.length) {
+            int[] f = firstList[first];
+            int[] s = secondList[second];
+            if (f[1] < s[0]) {
+                first++;
+            } else if (s[1] < f[0]) {
+                second++;
             } else {
-                i++;
+                int min = Math.max(f[0], s[0]);
+                int max = Integer.MIN_VALUE;
+                if (f[1] > s[1]) {
+                    second++;
+                    max = s[1];
+                } else {
+                    first++;
+                    max = f[1];
+                }
+                res.add(new int[] { min, max });
+
             }
         }
-        return res.toArray(new int[0][0]);
+        int[][] result = new int[res.size()][2];
+        for (int i = 0; i < res.size(); i++) {
+            result[i] = res.get(i);
+        }
+
+        return result;
     }
 }
 // @lc code=end
-
