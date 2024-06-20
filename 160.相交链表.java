@@ -10,38 +10,34 @@ import java.util.HashSet;
 /**
  * Definition for singly-linked list.
  * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode(int x) {
- *         val = x;
- *         next = null;
- *     }
+ * int val;
+ * ListNode next;
+ * ListNode(int x) {
+ * val = x;
+ * next = null;
+ * }
  * }
  */
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        /*if(headA == null || headB == null) return null;
-        ListNode pa = headA, pb = headB;
-        while(pa != pb){
-            pa = pa == null? headB: pa.next;
-            pb = pb == null? headA: pb.next;
-        }
-        return pa;*/
+        /*
+         * if(headA == null || headB == null) return null;
+         * ListNode pa = headA, pb = headB;
+         * while(pa != pb){
+         * pa = pa == null? headB: pa.next;
+         * pb = pb == null? headA: pb.next;
+         * }
+         * return pa;
+         */
         ListNode p1 = headA, p2 = headB;
-        while(p1 != p2) {
-            if(p1 == null) {
-                p1 = headB;
-            } else {
-                p1 = p1.next;
-            }
-            if(p2 == null) {
-                p2 = headA;
-            } else {
-                p2 = p2.next;
-            }
+        while (p1 != p2) {
+
+            p1 = p1 == null ? headB : p1.next;
+
+            p2 = p2 == null ? headA : p2.next;
+
         }
         return p1;
     }
 }
 // @lc code=end
-
