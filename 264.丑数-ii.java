@@ -13,25 +13,32 @@ import java.util.Set;
 
 class Solution {
     public int nthUglyNumber(int n) {
-        int[] num = new int[] { 2, 3, 5 };
-        Set<Long> set = new HashSet<>();
-        Queue<Long> pq = new PriorityQueue<>();
-        set.add(1L);
-        pq.add(1L);
-        for (int i = 1; i < n; i++) {
-            long x = pq.poll();
+        int p2 = 1, p3 = 1, p5 = 1;
+        int i2 = 1, i3 = 1, i5 = 1;
+        int p = 1;
+        int[] res = new int[n + 1];
+        // res[p] = 1;
 
-            for (int nu : num) {
-                long t = x * nu;
-                if (!set.contains(t)) {
-                    set.add(t);
-                    pq.add(t);
-                }
+        while (p <= n) {
+            int min = Math.min(p2, Math.min(p3, p5));
+            res[p++] = min;
+
+            if (min == p2) {
+                p2 = res[i2] * 2;
+                i2++;
+            }
+            if (min == p3) {
+                p3 = res[i3] * 3;
+                i3++;
+            }
+            if (min == p5) {
+                p5 = res[i5] * 5;
+                i5++;
             }
 
         }
-        long res = pq.poll();
-        return (int)res;
+
+        return res[p - 1];
     }
 
 }
