@@ -1,3 +1,7 @@
+import java.rmi.dgc.VMID;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /*
@@ -9,32 +13,25 @@ import java.util.PriorityQueue;
 // @lc code=start
 class Solution {
     public int nthSuperUglyNumber(int n, int[] primes) {
-        // for each pq, it contains [product(current value), prime, index]
-        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
-            return a[0] - b[0];
-        });
+        int m = primes.length;
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+        for (int i = 0; i < m; i++) {
+            pq.add(new int[] { primes[i], i, 0 });
 
-        for(int i = 0; i < primes.length; i++) {
-            pq.offer(new int[]{1, primes[i], 1});
         }
 
-        int[] ugly = new int[n + 1];
-        // System.out.println(ugly[0]);
-        int pos = 1;
-        while(pos <= n) {
-            int[] current = pq.poll();
-            int product = current[0];
-            int prime = current[1];
-            int index = current[2];
-            if(product != ugly[pos - 1]){
-                ugly[pos] = product;
-                pos++;
-            }
-            int[] next = new int[]{ugly[index] * prime, prime, index + 1};
-            pq.offer(next);
+        int[] ans = new int[n];
+        ans[0] = 1;
+
+        for (int j = 1; j < n;) {
+            int[] poll = pq.poll();
+            int val = poll[0], i = poll[1], idx = poll[2];
+            if (val != ans[j - 1])
+                ans[j++] = val;
+            pq.add(new int[] { ans[idx + 1] * primes[i], i, idx + 1 });
+
         }
-        return ugly[n];
+        return ans[n - 1];
     }
 }
 // @lc code=end
-

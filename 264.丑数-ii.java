@@ -17,7 +17,6 @@ class Solution {
         int i2 = 1, i3 = 1, i5 = 1;
         int p = 1;
         int[] res = new int[n + 1];
-        // res[p] = 1;
 
         while (p <= n) {
             int min = Math.min(p2, Math.min(p3, p5));
