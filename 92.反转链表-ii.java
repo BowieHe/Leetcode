@@ -8,35 +8,37 @@
 /**
  * Definition for singly-linked list.
  * public class ListNode {
- *     int val;
- *     ListNode next;
- *     ListNode() {}
- *     ListNode(int val) { this.val = val; }
- *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
 class Solution {
     public ListNode reverseBetween(ListNode head, int left, int right) {
-       if(left == 1) {
-        return reversN(head, right);
-       } 
-       head.next = reverseBetween(head.next, left - 1, right - 1);
-       return head;
+        if (left == 1) {
+            return reverse(head, right);
+        }
+        head.next = reverseBetween(head.next, left - 1, right - 1);
+        return head;
     }
 
-    ListNode dummy = null;
+    // always the last point, since the last value is keep updating
+    ListNode succ = null;
 
-    public ListNode reversN(ListNode head, int right) {
-        if(right == 1) {
-            dummy = head.next;
+    ListNode reverse(ListNode head, int n) {
+        if (n == 1) {
+            succ = head.next;
             return head;
         }
 
-        ListNode last = reversN(head.next, right - 1);
+        ListNode last = reverse(head.next, n - 1);
         head.next.next = head;
-        head.next = dummy;
+        head.next = succ;
+        // System.out.println("get succ:" + succ.val + " and val: " + head.val);
         return last;
     }
 
 }
-// @lc code=end 
+// @lc code=end
