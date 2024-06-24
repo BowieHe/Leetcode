@@ -11,28 +11,27 @@ import java.util.List;
 
 class ProductOfNumbers {
 
-    List<Integer> numbers = new ArrayList<>();
+    List<Integer> p;
 
     public ProductOfNumbers() {
-        this.numbers.add(1);
+        p = new ArrayList<>();
     }
-    
+
     public void add(int num) {
-        if(num == 0) {
-            this.numbers = new ArrayList<>();
-            this.numbers.add(1);
-            return;
-        } 
-        int n = numbers.size();
-        numbers.add(numbers.get(n - 1) * num);
+        p.add(num);
     }
-    
+
     public int getProduct(int k) {
-        int len = this.numbers.size() - 1;
-        if(k > len) {
-            return 0;
+        int index = p.size() - 1;
+        int res = 1;
+        for (int i = 0; i < k; i++) {
+            int num = p.get(index - i);
+            if (num == 0) {
+                return 0;
+            }
+            res *= num;
         }
-        return numbers.get(len) / numbers.get(len - k);
+        return res;
     }
 }
 
@@ -43,4 +42,3 @@ class ProductOfNumbers {
  * int param_2 = obj.getProduct(k);
  */
 // @lc code=end
-
