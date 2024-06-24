@@ -6,17 +6,19 @@
 
 // @lc code=start
 class NumArray {
-    private int[] nums;
+    private int[] sums;
+
     public NumArray(int[] nums) {
-        this.nums = nums;
-    }
-    
-    public int sumRange(int i, int j) {
+        sums = new int[nums.length + 1];
         int sum = 0;
-        for(int start = i; start <= j; start++){
-            sum += nums[start];
+        for (int i = 0; i < nums.length; i++) {
+            sum += nums[i];
+            sums[i + 1] = sum;
         }
-        return sum;
+    }
+
+    public int sumRange(int i, int j) {
+        return sums[j + 1] - sums[i];
     }
 }
 
@@ -26,4 +28,3 @@ class NumArray {
  * int param_1 = obj.sumRange(i,j);
  */
 // @lc code=end
-
