@@ -9,31 +9,28 @@ import java.util.Stack;
 // @lc code=start
 class Solution {
     public int evalRPN(String[] tokens) {
-        Stack<Integer> stk = new Stack<>();
-        for(String t: tokens) {
-            if("+-*/".contains(t)) {
-                int a = stk.pop(), b = stk.pop();
-                switch(t) {
-                    case "+":
-                        stk.push(a + b);
-                        break;
-                    case "*":
-                        stk.push(a * b);
-                        break;
-                    case "/":
-                        stk.push(b / a);
-                        break;
-                    case "-":
-                        stk.push(b - a);
-                        break;
+        Stack<Integer> stack = new Stack<>();
+        for (String t : tokens) {
+            
+            if (t.equals("+") ||t.equals("-") || t.equals("*") || t.equals("/")) {
+                int v1 = stack.pop();
+                int v2 = stack.pop();
+
+                if (t.equals("+")) {
+                    stack.push(v1 + v2);
+                } else if (t.equals("-")) {
+                    stack.push(v2 - v1);
+                } else if (t.equals("*")) {
+                    stack.push(v1 * v2);
+                } else {
+                    stack.push(v2 / v1);
                 }
             } else {
-                stk.push(Integer.parseInt(t));
+                stack.push(Integer.valueOf(t));
             }
         }
-        return stk.pop();
+        return stack.pop();
     }
-    
+
 }
 // @lc code=end
-
