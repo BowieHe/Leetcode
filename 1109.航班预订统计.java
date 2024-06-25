@@ -5,47 +5,24 @@
  */
 
 // @lc code=start
+
+import java.util.Arrays;
+
 class Solution {
     public int[] corpFlightBookings(int[][] bookings, int n) {
-        int[] nums = new int[n];
-        Diff df = new Diff(nums);
 
-        for(int[] book: bookings) {
-            int i = book[0] - 1;
-            int j = book[1] - 1;
-            int val = book[2];
-             df.incr(i, j, val);
+        int[] seat = new int[n + 1];
+        for (int[] book : bookings) {
+            seat[book[0] - 1] += book[2];
+            seat[book[1]] -= book[2];
         }
-        return df.results();
-    }
-
-    class Diff {
-        private int[] diff;
-
-        Diff(int[] nums) {
-            this.diff = new int[nums.length];
-            diff[0] = nums[0];
-            for(int i = 1; i < nums.length; i++) {
-                diff[i] = nums[i] - nums[i - 1];
-            }
+        int count = 0;
+        for (int i = 0; i < n; i++) {
+            count += seat[i];
+            seat[i] = count;
         }
 
-        void incr(int i, int j, int val) {
-            diff[i] += val;
-            if(j + 1 < diff.length) {
-                diff[j + 1] -= val;
-            }
-        }
-
-        int[] results() {
-            int[] res = new int[diff.length];
-            res[0] = diff[0];
-            for(int i = 1; i < diff.length; i++) {
-                res[i] = res[i - 1] + diff[i];
-            }
-            return res;
-        }
+        return Arrays.copyOfRange(seat, 0, seat.length - 1);
     }
 }
 // @lc code=end
-
