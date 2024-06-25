@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.Stack;
 
 /*
@@ -9,29 +10,26 @@ import java.util.Stack;
 // @lc code=start
 class Solution {
     public String simplifyPath(String path) {
-        String[] parts = path.split("/");
-        Stack<String> stk = new Stack<>();
-        int i = 1;
-        for(String part: parts) {
-            System.out.print(i++);
-            System.out.println(part);
-            if(part.equals("") || part.equals(".")) {
-                continue;
-            } else if(part.equals("..")) {
-                if(!stk.empty()) {
-                    stk.pop();
-                
+        Stack<String> stack = new Stack<>();
+        String[] paths = path.split("/");
+        for (String p : paths) {
+            if (p.equals("..")) {
+                if (!stack.empty()) {
+                    stack.pop();
                 }
+            } else if (p.equals(".") || p.length() == 0) {
                 continue;
+            } else {
+                stack.push(p);
             }
-            stk.push(part);
         }
-        String res = "";
-        while(!stk.isEmpty()) {
-            res = ("/" + stk.pop() + res);
+
+        String r = "";
+        while (!stack.empty()) {
+            r = "/" + stack.pop() + r;
         }
-        return res.equals("")? "/" : res;
+
+        return r.length() > 0 ? r : "/";
     }
 }
 // @lc code=end
-
