@@ -9,18 +9,18 @@ import java.util.Stack;
 // @lc code=start
 class Solution {
     public int minInsertions(String s) {
-        int need = 0, res = 0;
-        for(int i = 0; i < s.length(); i++) {
-            if(s.charAt(i) == '(') {
-                need+= 2;
-                if(need % 2 == 1) {
-                    res++;
+        int res = 0, need = 0;
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                need += 2;
+                // res++;
+                if (need % 2 == 1) {
                     need--;
+                    res++;
                 }
-            }
-            if(s.charAt(i) == ')') {
+            } else {
                 need--;
-                if(need == -1) {
+                if (need == -1) {
                     res++;
                     need = 1;
                 }
@@ -30,4 +30,3 @@ class Solution {
     }
 }
 // @lc code=end
-
