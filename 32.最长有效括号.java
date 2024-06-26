@@ -9,28 +9,27 @@ import java.util.Stack;
 // @lc code=start
 class Solution {
     public int longestValidParentheses(String s) {
-        Stack<Integer> stk = new Stack<>();
-        int[] dp = new int[s.length() + 1];
-        int maxVal = 0;
-        for(int i = 0; i < s.length(); i++) {
-            if(s.charAt(i) == '(') {
-                stk.push(i);
-                dp[i + 1] = 0;
+        Stack<Integer> stack = new Stack<>();
+        // push random start number, which also means the minimun value that haven't
+        // benn matched
+        stack.push(-1);
+        char[] a = s.toCharArray();
+        int res = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char b = a[i];
+            if (b == '(') {
+                stack.push(i);
             } else {
-                if(stk.isEmpty()) {
-                    dp[i + 1] = 0;
+                stack.pop();
+                if (stack.empty()) {
+                    stack.push(i);
                 } else {
-                    // right brackle matched
-                    int leftIndex = stk.pop();
-                    int val = 1 + (i - leftIndex) + dp[leftIndex];
-                    maxVal = Math.max(maxVal, val);
-                    dp[i + 1] = val;
+                    res = Math.max(res, i - stack.peek());
                 }
             }
         }
-        return maxVal;
-        
+
+        return res;
     }
 }
 // @lc code=end
-
