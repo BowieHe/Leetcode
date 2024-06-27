@@ -9,36 +9,36 @@ import java.util.PriorityQueue;
 // @lc code=start
 class MedianFinder {
 
-    PriorityQueue<Integer> high;
-    PriorityQueue<Integer> low;
+    PriorityQueue<Integer> small;
+    PriorityQueue<Integer> big;
 
-    public MedianFinder() {
-        high = new PriorityQueue<>((a, b) -> {
-            return b - a;
-        });
-        low = new PriorityQueue<>();
+    MedianFinder() {
+        this.small = new PriorityQueue<>((a, b) -> b - a);
+        this.big = new PriorityQueue<>();
     }
-    
+
     public void addNum(int num) {
-        if(low.size() >= high.size()) {
-            low.offer(num);
-            high.offer(low.poll());
-        } else {
-            high.offer(num);
-            low.offer(high.poll());
-        }
-    }
-    
-    public double findMedian() {
-        System.out.print(high.peek());
-        System.out.println(low.peek());
+        this.small.offer(num);
 
-        if(low.size() > high.size()) {
-            return low.peek();
-        } else if(high.size() > low.size()) {
-            return high.peek();
+        while (this.small.size() - this.big.size() > 1) {
+            this.big.offer(this.small.poll());
+        }
+
+        while (this.small.size() > 0 &&
+                this.big.size() > 0 &&
+                this.small.peek() > this.big.peek()) {
+            int s = this.small.poll(), b = this.big.poll();
+            this.small.offer(b);
+            this.big.offer(s);
+        }
+
+    }
+
+    public double findMedian() {
+        if (this.small.size() > this.big.size()) {
+            return (double) this.small.peek();
         } else {
-            return (low.peek() + high.peek()) / 2.0;
+            return (((double) this.small.peek() + this.big.peek()) / 2);
         }
     }
 }
@@ -50,4 +50,3 @@ class MedianFinder {
  * double param_2 = obj.findMedian();
  */
 // @lc code=end
-
