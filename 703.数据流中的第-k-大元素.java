@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.PriorityQueue;
 
 /*
@@ -9,34 +12,28 @@ import java.util.PriorityQueue;
 // @lc code=start
 class KthLargest {
 
-    int top;
     PriorityQueue<Integer> pq;
+    int index;
 
     public KthLargest(int k, int[] nums) {
-        pq = new PriorityQueue<>();
+        this.pq = new PriorityQueue<>((a, b) -> a - b);
+        this.index = k;
 
-        for(int num: nums) {
-            pq.offer(num);
-            if(pq.size() > k) {
-                pq.poll();
-            }
+        for (int n : nums) {
+            pq.offer(n);
         }
-
-        this.top = k;
-    }
-    
-    public int add(int val) {
-        Integer min = pq.peek();
-        if(pq.size() < top) {
-            pq.offer(val);
-            return pq.peek();
-        } else if(val <= min){
-            return min;
-        } else {
-            pq.offer(val);
+        while (pq.size() > k) {
             pq.poll();
-            return pq.peek();
         }
+    }
+
+    int add(int val) {
+        pq.offer(val);
+        while (pq.size() > this.index) {
+            pq.poll();
+        }
+
+        return pq.peek();
     }
 }
 
@@ -46,4 +43,3 @@ class KthLargest {
  * int param_1 = obj.add(val);
  */
 // @lc code=end
-
