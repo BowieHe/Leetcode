@@ -5,27 +5,26 @@
  */
 
 // @lc code=start
+
+import java.util.PriorityQueue;
+
 class SeatManager {
 
-    int[] seats;
-    int minSeat;
+    PriorityQueue<Integer> pq;
 
     public SeatManager(int n) {
-        seats = new int[n];
-        minSeat = 0;
-    }
-    
-    public int reserve() {
-        while(seats[minSeat] != 0) {
-            minSeat++;
+        pq = new PriorityQueue<>((a, b) -> (a - b));
+        for (int i = 1; i <= n; i++) {
+            pq.offer(i);
         }
-        seats[minSeat] = 1;
-        return ++minSeat;
     }
-    
+
+    public int reserve() {
+        return pq.poll();
+    }
+
     public void unreserve(int seatNumber) {
-        minSeat = Math.min(minSeat, seatNumber - 1);
-        seats[seatNumber - 1] = 0;
+        pq.offer(seatNumber);
     }
 }
 
@@ -36,4 +35,3 @@ class SeatManager {
  * obj.unreserve(seatNumber);
  */
 // @lc code=end
-
