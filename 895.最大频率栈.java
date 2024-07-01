@@ -1,5 +1,3 @@
-import java.util.HashMap;
-import java.util.Map;
 import java.util.*;
 
 /*
@@ -12,36 +10,33 @@ import java.util.*;
 class FreqStack {
 
     int maxFreq;
-    Map<Integer, Integer> valToFreq;
-    Map<Integer, Stack<Integer>> freqToVal;
+    HashMap<Integer, Integer> freq;
+    HashMap<Integer, Deque<Integer>> group;
 
     public FreqStack() {
-        this.valToFreq = new HashMap<>();
-        this.freqToVal = new HashMap<>();
-        maxFreq = 0;
+        this.maxFreq = 0;
+        this.freq = new HashMap<Integer, Integer>();
+        this.group = new HashMap<>();
     }
-    
+
     public void push(int val) {
-        int freq = valToFreq.getOrDefault(val, 0) + 1;
-        valToFreq.put(val, freq);
-        maxFreq = Math.max(maxFreq, freq);
-        Stack<Integer> freqVal = freqToVal.getOrDefault(freq, new Stack<Integer>());
-        freqVal.push(val);
-        freqToVal.put(freq, freqVal);
+        int f = this.freq.getOrDefault(val, 0) + 1;
+        this.freq.put(val, f);
+        maxFreq = Math.max(maxFreq, f);
+
+        group.putIfAbsent(f, new ArrayDeque<Integer>());
+        group.get(f).push(val);
     }
-    
+
     public int pop() {
-        // System.out.print(maxFreq);
-        Stack<Integer> freqVal = freqToVal.get(maxFreq);
-        // System.out.print("===");
-        // System.out.println(freqVal.peek());
-        int val = freqVal.pop();
-        valToFreq.put(val, valToFreq.get(val) - 1);
-        if(!freqVal.empty()) {
-            freqToVal.put(maxFreq, freqVal);
-        } else {
+        int val = group.get(maxFreq).peek();
+        freq.put(val, freq.get(val) - 1);
+        group.get(maxFreq).pop();
+
+        if (group.get(maxFreq).isEmpty()) {
             maxFreq--;
         }
+
         return val;
     }
 }
@@ -53,4 +48,3 @@ class FreqStack {
  * int param_2 = obj.pop();
  */
 // @lc code=end
-
