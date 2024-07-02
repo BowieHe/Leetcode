@@ -9,73 +9,88 @@ import java.util.*;
 
 class LFUCache {
 
-    // key to values
-    Map<Integer, Integer> kv;
-    // key to frequency
-    Map<Integer, Integer> kf;
-    // frquency to keys
-    Map<Integer, LinkedHashSet<Integer>> fk;
-
     int cap;
+    int curNum;
     int minFreq;
+    Map<Integer, Node> map;
+    Map<Integer, LinkedHashSet<Node>> group;
 
     public LFUCache(int capacity) {
         this.cap = capacity;
-        this.kv = new HashMap<>();
-        this.kf = new HashMap<>();
-        this.fk = new HashMap<>();
         this.minFreq = 0;
-    }
-    
-    public int get(int key) {
-        if(this.kv.containsKey(key)) {
-            addFrequency(key);
-            return kv.get(key);
-        }
-        System.out.println("key not exist " + key);
-        return -1;
-    }
-    
-    public void put(int key, int value) {
-        // key already exist, or capacity is not full, add values
-        if(this.kv.size() < cap || this.kv.containsKey(key)) {
-            kv.put(key, value);
-            addFrequency(key);
-        } else if(cap > 0){
-            // keySet is full, need to remove
-            int minKey = this.fk.get(minFreq).iterator().next();
-            // Iterator it = this.fk.get(minFreq).iterator();
-            // System.out.print("== get list values ");
-            // while(it.hasNext()) {
-            //     System.out.print("=" + it.next() + "=");
-            // }
-            System.out.println(" add key " + key + " and get minFreq " + minFreq + " remove min key " + minKey);
-            this.fk.get(minFreq).remove(minKey);
-            this.kv.remove(minKey);
-            this.kf.remove(minKey);
-            this.minFreq = 1;
-            this.kv.put(key, value);
-            this.kf.put(key, 1);
-            this.fk.putIfAbsent(1, new LinkedHashSet<>());
-            this.fk.get(1).add(key);
-        }
+        this.curNum = 0;
+        this.map = new HashMap<>();
+        this.group = new HashMap<>();
     }
 
-    void addFrequency(int key) {
-        int freq = this.kf.getOrDefault(key, 0);
-        this.kf.put(key, freq + 1);
-        this.fk.putIfAbsent(freq + 1, new LinkedHashSet<>());
-        this.fk.get(freq + 1).add(key);
-        if(freq == 0 || this.minFreq == 0) {
-            this.minFreq = 1;
-        } else if(freq > 0) {
-            
-            this.fk.get(freq).remove(key);
-            if(this.fk.get(freq).isEmpty() && this.minFreq == freq) {
-                this.minFreq++;
-            }
+    public int get(int key) {
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            freqPlus(node);
+            return node.value;
+        } else {
+            return -1;
         }
-        System.out.println("add frequency for key " + key + " with value " + (freq + 1) + " with min freq " + minFreq );
+
+    }
+
+    public void put(int key, int value) {
+        if (cap <= 0) {
+            return;
+        }
+
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.value = value;
+            freqPlus(node);
+        } else {
+
+            eliminate();
+
+            Node cur = new Node(key, value, 1);
+            map.put(key, cur);
+            group.putIfAbsent(1, new LinkedHashSet<>());
+            group.get(1).add(cur);
+            minFreq = 1;
+            curNum++;
+        }
+
+    }
+
+    void freqPlus(Node node) {
+        int preFreq = node.freq;
+        group.get(preFreq).remove(node);
+        if (group.get(preFreq).isEmpty() && minFreq == preFreq) {
+            minFreq++;
+        }
+        node.freq++;
+        group.putIfAbsent(node.freq, new LinkedHashSet<>());
+        group.get(node.freq).add(node);
+
+    }
+
+    void eliminate() {
+        if (curNum < cap) {
+            return;
+        }
+        Set<Node> preList = group.get(minFreq);
+        Node remove = preList.iterator().next();
+        preList.remove(remove);
+        map.remove(remove.key);
+        curNum--;
+
+    }
+
+    class Node {
+        int key;
+        int value;
+        int freq;
+
+        Node(int key, int value, int freq) {
+            this.key = key;
+            this.value = value;
+            this.freq = freq;
+        }
     }
 }
 
@@ -86,4 +101,3 @@ class LFUCache {
  * obj.put(key,value);
  */
 // @lc code=end
-
