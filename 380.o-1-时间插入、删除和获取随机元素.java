@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /*
  * @lc app=leetcode.cn id=380 lang=java
@@ -11,46 +9,44 @@ import java.util.Random;
 // @lc code=start
 class RandomizedSet {
 
-    Random random;
-    List<Integer> listVal;
-    Map<Integer, Integer> mapVal;
+    Map<Integer, Integer> set;
+    List<Integer> list;
 
     public RandomizedSet() {
-        this.random = new Random();
-        listVal = new ArrayList<>();
-        this.mapVal = new HashMap<Integer, Integer>();
-
+        this.set = new HashMap<Integer, Integer>();
+        this.list = new ArrayList<>();
     }
-    
+
     public boolean insert(int val) {
-        if(mapVal.containsKey(val)) {
+        if (set.containsKey(val)) {
             return false;
+        } else {
+            set.put(val, list.size());
+            list.add(val);
+            return true;
         }
-        listVal.add(val);
-        mapVal.put(val, listVal.size() - 1);
-        return true;
+
     }
-    
+
     public boolean remove(int val) {
-        if(mapVal.containsKey(val)) {
-            int index = mapVal.get(val);
-            int lastVal = listVal.get(listVal.size() - 1);
+        if (set.containsKey(val)) {
 
-            listVal.set(index, lastVal);
-            mapVal.put(lastVal, index);
+            int index = set.get(val);
 
-            listVal.remove(listVal.size() - 1);
-            mapVal.remove(val);
-            
+            int last = list.get(list.size() - 1);
+            list.set(index, last);
+            set.put(last, index);
+            set.remove(val);
+            list.remove(list.size() - 1);
             return true;
         } else {
             return false;
         }
+
     }
-    
+
     public int getRandom() {
-        int index = random.nextInt(listVal.size());
-        return listVal.get(index);
+        return list.get((int) (Math.random() * (list.size())));
     }
 }
 
@@ -62,4 +58,3 @@ class RandomizedSet {
  * int param_3 = obj.getRandom();
  */
 // @lc code=end
-
