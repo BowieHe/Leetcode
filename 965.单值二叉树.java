@@ -5,41 +5,38 @@
  */
 
 // @lc code=start
+
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
  * }
  */
 class Solution {
+
+    Integer s;
+
     public boolean isUnivalTree(TreeNode root) {
-
-        Integer val = root.val;
-        if(val == null) return true;
-        return equals(root, val);
-    }
-
-    public boolean equals(TreeNode root, int val) {
-        if(root == null) {
+        if (root == null) {
             return true;
-        } else if(root.val != val) {
+        }
+        if ((root.left != null && root.val != root.left.val) || (root.right != null && root.val != root.right.val)) {
             return false;
         }
 
-        if(!equals(root.left, val) || !equals(root.right, val)) {
-            return false;
-        }
-        return true;
+        return isUnivalTree(root.left) && isUnivalTree(root.right);
     }
 }
 // @lc code=end
-
