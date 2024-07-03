@@ -8,33 +8,40 @@ import java.util.Stack;
 
 // @lc code=start
 class MinStack {
-    private Stack<Integer> stack;
-    private Stack<Integer> min_stack;
-    
-    /** initialize your data structure here. */
+
+    Stack<Integer> stack;
+    Stack<Integer> min;
+
     public MinStack() {
-        stack = new Stack<>();
-        min_stack = new Stack<>();
+        this.stack = new Stack<>();
+        this.min = new Stack<>();
     }
-    
+
     public void push(int x) {
         stack.push(x);
-        if(min_stack.isEmpty())min_stack.push(x);
-        else if(x <= min_stack.peek()) min_stack.push(x);
+        if (min.empty()) {
+            min.push(x);
+        } else {
+            int minVal = min.peek();
+            if (minVal < x) {
+                min.push(minVal);
+            } else {
+                min.push(x);
+            }
+        }
     }
-    
+
     public void pop() {
-        int p = stack.pop();
-        int m = min_stack.peek();
-        if(p == m)min_stack.pop();
+        stack.pop();
+        min.pop();
     }
-    
+
     public int top() {
         return stack.peek();
     }
-    
+
     public int getMin() {
-        return min_stack.peek();
+        return min.peek();
     }
 }
 
@@ -47,4 +54,3 @@ class MinStack {
  * int param_4 = obj.getMin();
  */
 // @lc code=end
-
