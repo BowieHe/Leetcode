@@ -11,44 +11,45 @@ import java.util.Map;
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
  * }
  */
 class Solution {
-    Map<Integer, Integer> valIndex = new HashMap<>();
+
+    Map<Integer, Integer> map;
 
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        for(int i = 0; i < inorder.length; i++) {
-            valIndex.put(inorder[i], i);
+        this.map = new HashMap<Integer, Integer>();
+        for (int i = 0; i < inorder.length; i++) {
+            map.put(inorder[i], i);
         }
 
-        TreeNode root = new TreeNode(preorder[0]);
-        return build(preorder, 0, preorder.length - 1,
-                inorder, 0, inorder.length - 1);
+        return build(preorder, 0, preorder.length - 1, inorder, 0, inorder.length - 1);
+
     }
 
-    TreeNode build(int[] preorder, int preStart, int preEnd, int[] inorder, int inStart, int inEnd) {
-        if(preStart > preEnd) {
+    TreeNode build(int[] preorder, int prestart, int preend, int[] inorder, int instart, int inend) {
+        if (prestart > preend) {
             return null;
         }
-        int index = valIndex.getOrDefault(preorder[preStart], 9999);
-        
-        int len = index - inStart;
-        TreeNode root = new TreeNode(preorder[preStart]);
-        root.left = build(preorder, preStart + 1, preStart + len, 
-                inorder, inStart, index - 1);
-        root.right = build(preorder, preStart + len + 1, preEnd, inorder, index + 1, inEnd);
+        TreeNode root = new TreeNode(preorder[prestart]);
+        int leftIndex = map.get(root.val);
+        int leftSize = leftIndex - instart;
+
+        root.left = build(preorder, prestart + 1, prestart + leftSize, inorder, instart, leftIndex - 1);
+        root.right = build(preorder, prestart + leftSize + 1, preend, inorder, leftIndex + 1, inend);
+
         return root;
     }
+
 }
 // @lc code=end
-
