@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 /*
  * @lc app=leetcode.cn id=710 lang=java
@@ -15,34 +16,43 @@ import java.util.Random;
 // @lc code=start
 class Solution {
 
-    Random random;
-    int len, m, index;
-    HashSet<Integer> s1 = new HashSet<>(), s2 = new HashSet<>();
-    Map<Integer, Integer> val = new HashMap<>();
+    Random random = new Random();
+    Set<Integer> s1;
+    Set<Integer> s2;
+    Map<Integer, Integer> map;
+    int idx, max;
 
     public Solution(int n, int[] blacklist) {
-        random = new Random();
-        len = n;
-        m = blacklist.length;
-        index = n - m;
-        for(int num: blacklist) {
-            if(num < index) s1.add(num);
-            else s2.add(num);
+        int m = blacklist.length;
+        this.s1 = new HashSet<>();
+        this.s2 = new HashSet<>();
+        this.map = new HashMap<>();
+        this.idx = n - m;
+        this.max = n - m;
+        for (int a : blacklist) {
+            if (a < max) {
+                s1.add(a);
+            } else {
+                s2.add(a);
+            }
         }
     }
-    
-    public int pick() {
-        
-        int num = random.nextInt(len - m);
-        if(!s1.contains(num)) return num;
 
-        if(!val.containsKey(num)) {
-            while(s2.contains(index)) index++;
-            val.put(num, index++);
+    public int pick() {
+
+        int rand = random.nextInt(max);
+        if (!s1.contains(rand)) {
+            return rand;
+        }
+        if (!map.containsKey(rand)) {
+            while (s2.contains(idx))
+                idx++;
+            map.put(rand, idx);
+            idx++;
         }
 
-        return val.get(num);
-        
+        return map.get(rand);
+
     }
 }
 
@@ -52,4 +62,3 @@ class Solution {
  * int param_1 = obj.pick();
  */
 // @lc code=end
-
