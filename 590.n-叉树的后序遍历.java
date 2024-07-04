@@ -27,27 +27,26 @@ class Node {
 */
 
 class Solution {
-    
-    public List<Integer> postorder(Node root) {
 
-        List<Integer> res = new ArrayList<>();
-        if(root != null) {
-            res.add(dfs(root, res));
+    List<Integer> res = new ArrayList<>();
+
+    public List<Integer> postorder(Node root) {
+        if (root == null) {
+            return res;
         }
+
+        if (root.children == null) {
+            res.add(root.val);
+        } else {
+            for (Node n : root.children) {
+                postorder(n);
+            }
+        }
+
+        res.add(root.val);
 
         return res;
     }
 
-    int dfs(Node root, List<Integer> res) {
-        if(root.children == null || root.children.size() == 0) {
-            return root.val;
-        }
-
-        for(Node node: root.children) {
-            res.add(dfs(node, res));
-        }
-        return root.val;
-    }
 }
 // @lc code=end
-
