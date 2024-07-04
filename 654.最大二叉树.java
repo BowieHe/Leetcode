@@ -1,7 +1,9 @@
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.HashMap;
+import java.util.List;
 
 import javax.swing.tree.TreeNode;
 
@@ -38,33 +40,22 @@ class Solution {
         Arrays.fill(left, -1);
         Arrays.fill(right, -1);
         TreeNode[] tree = new TreeNode[n];
-        Deque<Integer> dq = new ArrayDeque<>();
+        List<Integer> dq = new ArrayList<>();
 
         for (int i = 0; i < n; i++) {
             TreeNode t = new TreeNode(nums[i]);
             tree[i] = t;
-            while (!dq.isEmpty() && nums[dq.peek()] < nums[i]) {
-                right[dq.pop()] = i;
+            while (dq.size() > 0 && nums[dq.get(dq.size() - 1)] < nums[i]) {
+                tree[i].left = tree[dq.get(dq.size() - 1)];
+                dq.remove(dq.size() - 1);
             }
-            if (!dq.isEmpty()) {
-                left[i] = dq.peek();
+            if (dq.size() > 0) {
+                tree[dq.get(dq.size() - 1)].right = tree[i];
             }
-            dq.push(i);
+            dq.add(i);
         }
 
-        TreeNode root = null;
-
-        for (int i = 0; i < n; i++) {
-            if (left[i] == -1 && right[i] == -1) {
-                root = tree[i];
-            } else if (right[i] == -1 || (left[i] != -1 && nums[left[i]] < nums[right[i]])) {
-                tree[left[i]].right = tree[i];
-            } else {
-                tree[right[i]].left = tree[i];
-            }
-        }
-
-        return root;
+        return tree[dq.get(0)];
 
     }
 
