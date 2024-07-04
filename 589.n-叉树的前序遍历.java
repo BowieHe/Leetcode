@@ -28,24 +28,21 @@ class Node {
 */
 
 class Solution {
+    List<Integer> res = new ArrayList<>();
+
     public List<Integer> preorder(Node root) {
-        List<Integer> res = new ArrayList<>();
-        
-        dfs(root, res);
+        if (root == null) {
+            return res;
+        }
+
+        res.add(root.val);
+        if (root.children != null) {
+            for (Node n : root.children) {
+                preorder(n);
+            }
+        }
 
         return res;
     }
-
-    void dfs(Node root, List<Integer> res) {
-        if(root != null) {
-            res.add(root.val);
-            List<Node> children = root.children;
-            for(int i = 0; i < children.size(); i++) {
-                Node node = children.get(i);
-                dfs(node, res);
-            }
-        }
-    }
 }
 // @lc code=end
-
