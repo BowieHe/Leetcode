@@ -15,41 +15,79 @@ import javax.swing.tree.TreeNode;
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
  * }
  */
 class Solution {
-    
-    public TreeNode constructMaximumBinaryTree(int[] nums) {
-        Deque<TreeNode> dq = new ArrayDeque<>();
-        for(int i = 0; i < nums.length; i++) {
-            TreeNode node = new TreeNode(nums[i]);
-            while(!dq.isEmpty()) {
-                TreeNode topNode = dq.peekLast();
-                if(node.val > topNode.val) {
-                    dq.removeLast();
-                    node.left = topNode;
-                } else {
-                    dq.addLast(node);
-                    topNode.right = node;
-                    break;
-                }
-            }
-            if(dq.isEmpty()) dq.addLast(node);
 
+    public TreeNode constructMaximumBinaryTree(int[] nums) {
+
+        // return dfs(nums, 0, nums.length - 1);
+
+        int n = nums.length;
+        int[] left = new int[n], right = new int[n];
+        Arrays.fill(left, -1);
+        Arrays.fill(right, -1);
+        TreeNode[] tree = new TreeNode[n];
+        Deque<Integer> dq = new ArrayDeque<>();
+
+        for (int i = 0; i < n; i++) {
+            TreeNode t = new TreeNode(nums[i]);
+            tree[i] = t;
+            while (!dq.isEmpty() && nums[dq.peek()] < nums[i]) {
+                right[dq.pop()] = i;
+            }
+            if (!dq.isEmpty()) {
+                left[i] = dq.peek();
+            }
+            dq.push(i);
         }
 
-        return dq.getFirst();
+        TreeNode root = null;
+
+        for (int i = 0; i < n; i++) {
+            if (left[i] == -1 && right[i] == -1) {
+                root = tree[i];
+            } else if (right[i] == -1 || (left[i] != -1 && nums[left[i]] < nums[right[i]])) {
+                tree[left[i]].right = tree[i];
+            } else {
+                tree[right[i]].left = tree[i];
+            }
+        }
+
+        return root;
+
+    }
+
+    TreeNode dfs(int[] nums, int start, int end) {
+        if (start > end) {
+            return null;
+        }
+        int max = -1;
+        int index = -1;
+        for (int i = start; i <= end; i++) {
+            if (nums[i] > max) {
+                max = nums[i];
+                index = i;
+            }
+        }
+
+        TreeNode root = new TreeNode(max);
+        root.left = dfs(nums, start, index - 1);
+        root.right = dfs(nums, index + 1, end);
+
+        System.out.println(root.val);
+        return root;
+
     }
 }
 // @lc code=end
-
