@@ -1,5 +1,6 @@
 import java.lang.Character.Subset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 
 /*
@@ -12,47 +13,46 @@ import java.util.Map;
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
  * }
  */
 class Solution {
-    Map<String, Integer> subTreeRecord;
-    List<TreeNode> res;
+    Map<String, Integer> map = new HashMap<>();
+    List<TreeNode> res = new ArrayList<>();
+
     public List<TreeNode> findDuplicateSubtrees(TreeNode root) {
-        subTreeRecord = new HashMap<>();
-        res = new ArrayList<>();
-        traverse(root);
+
+        revrese(root);
 
         return res;
     }
 
-    String traverse(TreeNode root) {
-        if(root == null) {
-            return "#";
+    String revrese(TreeNode root) {
+        if (root == null) {
+            return "@";
         }
 
-        String left = traverse(root.left);
-        String right = traverse(root.right);
+        String left = revrese(root.left);
+        String right = revrese(root.right);
+        String sub = left + "," + right + "," + root.val;
 
-        String subTree = left + "," + right + "," + root.val;
-        System.out.println(subTree);
+        int val = map.getOrDefault(sub, 0);
 
-        int freq = subTreeRecord.getOrDefault(subTree, 0);
-        if(freq == 1) {
+        if (val == 1) {
             res.add(root);
         }
-        subTreeRecord.put(subTree, freq + 1);
-        return subTree;
+        map.put(sub, val + 1);
+
+        return sub;
     }
 }
 // @lc code=end
-
