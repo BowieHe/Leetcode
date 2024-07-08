@@ -35,15 +35,16 @@ import javax.swing.text.html.HTMLDocument.Iterator;
  */
 public class NestedIterator implements Iterator<Integer> {
 
-    Deque<Integer> dq = new ArrayDeque<>();
+    Deque<Integer> dq;
 
     public NestedIterator(List<NestedInteger> nestedList) {
+        dq = new ArrayDeque<>();
         dfs(nestedList);
     }
 
     @Override
     public Integer next() {
-        return hasNext() ? dq.pollFirst() : -1;
+        return dq.pop();
     }
 
     @Override
@@ -52,11 +53,12 @@ public class NestedIterator implements Iterator<Integer> {
     }
 
     void dfs(List<NestedInteger> nestedList) {
-        for (NestedInteger ni : nestedList) {
-            if (ni.isInteger()) {
-                dq.add(ni.getInteger());
+        for (NestedInteger n : nestedList) {
+            if (n.isInteger()) {
+                dq.add(n.getInteger());
             } else {
-                dfs(ni.getList());
+                List<NestedInteger> list = n.getList();
+                dfs(list);
             }
         }
     }
