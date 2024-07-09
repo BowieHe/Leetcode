@@ -5,40 +5,37 @@
  */
 
 // @lc code=start
+
+import java.util.ArrayList;
+
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode(int x) { val = x; }
  * }
  */
 class Solution {
-    boolean containsP, containsQ;
-    TreeNode commonNode = null;
 
+    TreeNode ancient;
 
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-        if(root == null) {
-            return null;
-        }
-        if(root == p || root == q) {
+
+        if (root == null || root == p || root == q) {
             return root;
         }
 
-        TreeNode leftNode = lowestCommonAncestor(root.left, p, q);
-        TreeNode rightNode = lowestCommonAncestor(root.left, p, q);
-        
-        if(leftNode != null && rightNode != null) {
-            return root;
-        } else if(leftNode == null && rightNode == null) {
-            return null;
-        } else {
-            return leftNode == null? rightNode: leftNode;
-        }
+        TreeNode left = lowestCommonAncestor(root.left, p, q);
+        TreeNode right = lowestCommonAncestor(root.right, p, q);
+        if (left == null)
+            return right;
+        if (right == null)
+            return left;
+        return root;
+
     }
 
 }
 // @lc code=end
-
