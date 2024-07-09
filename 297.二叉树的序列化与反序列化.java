@@ -1,6 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
-
-import javax.swing.tree.TreeNode;
 
 /*
  * @lc app=leetcode.cn id=297 lang=java
@@ -12,58 +12,56 @@ import javax.swing.tree.TreeNode;
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode(int x) { val = x; }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode(int x) { val = x; }
  * }
  */
 public class Codec {
 
     String SEP = ",";
-    String NULL = "NULL";
+    String NULL = "#";
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
         StringBuilder sb = new StringBuilder();
-        serialize(root, sb);
+        ser(root, sb);
         return sb.toString();
     }
 
-    public void serialize(TreeNode root, StringBuilder sb) {
-        if(root == null) {
+    void ser(TreeNode root, StringBuilder sb) {
+        if (root == null) {
             sb.append(NULL).append(SEP);
             return;
         }
-
         sb.append(root.val).append(SEP);
-        serialize(root.left, sb);
-        serialize(root.right, sb);
-        
-    } 
+        ser(root.left, sb);
+        ser(root.right, sb);
+    }
 
     // Decodes your encoded data to tree.
     public TreeNode deserialize(String data) {
-        LinkedList<String> nodes = new LinkedList<>();
-        for(String no: data.split(SEP, 0)) {
-            nodes.addLast(no);
+        Deque<String> dq = new ArrayDeque<>();
+        for (String node : data.split(SEP)) {
+            dq.add(node);
         }
-
-        return deserialize(nodes);
+        return deser(dq);
     }
 
-    TreeNode deserialize(LinkedList<String> nodes) {
-        if(nodes.isEmpty()) {
+    TreeNode deser(Deque<String> dq) {
+        if (dq.isEmpty()) {
             return null;
         }
 
-        String val = nodes.removeFirst();
-        if(val.equals(NULL)) {
+        String r = dq.poll();
+        if (r.equals(NULL))
             return null;
-        }
-        TreeNode node = new TreeNode(Integer.parseInt(val));
-        node.left = deserialize(nodes);
-        node.right = deserialize(nodes);
+        TreeNode node = new TreeNode(Integer.valueOf(r));
+
+        node.left = deser(dq);
+        node.right = deser(dq);
+
         return node;
     }
 }
@@ -73,4 +71,3 @@ public class Codec {
 // Codec deser = new Codec();
 // TreeNode ans = deser.deserialize(ser.serialize(root));
 // @lc code=end
-
