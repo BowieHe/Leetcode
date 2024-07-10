@@ -1,6 +1,6 @@
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.LinkedList;
-
-import javax.xml.soap.Node;
 
 /*
  * @lc app=leetcode.cn id=116 lang=java
@@ -34,25 +34,36 @@ class Node {
 
 class Solution {
 
-    LinkedList<Node> nodes = new LinkedList<>();
+    Deque<Node> dq;
 
     public Node connect(Node root) {
-        if(root == null) {
+        if (root == null) {
             return null;
         }
-        traverse(root.left, root.right);
+        this.dq = new ArrayDeque<>();
+        dq.add(root);
+
+        bfs(root);
         return root;
     }
 
-    void traverse(Node left, Node right) {
-        if(left == null || right == null) {
+    void bfs(Node root) {
+        if (root == null) {
             return;
         }
-        left.next = right;
-        traverse(left.left, left.right);
-        traverse(left.right, right.left);
-        traverse(right.left, right.right);
+        int len = dq.size();
+        for (int i = 0; i < len; i++) {
+            Node n = dq.poll();
+            if (n.left != null) {
+                dq.add(n.left);
+                dq.add(n.right);
+            }
+            if (i < len - 1) {
+                n.next = dq.peek();
+            }
+        }
+
+        bfs(root.left);
     }
 }
 // @lc code=end
-
