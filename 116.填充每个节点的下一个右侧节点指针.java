@@ -34,36 +34,53 @@ class Node {
 
 class Solution {
 
-    Deque<Node> dq;
+    /*
+     * Deque<Node> dq;
+     * 
+     * public Node connect(Node root) {
+     * if (root == null) {
+     * return null;
+     * }
+     * this.dq = new ArrayDeque<>();
+     * dq.add(root);
+     * 
+     * bfs(root);
+     * return root;
+     * }
+     * 
+     * void bfs(Node root) {
+     * if (root == null) {
+     * return;
+     * }
+     * int len = dq.size();
+     * for (int i = 0; i < len; i++) {
+     * Node n = dq.poll();
+     * if (n.left != null) {
+     * dq.add(n.left);
+     * dq.add(n.right);
+     * }
+     * if (i < len - 1) {
+     * n.next = dq.peek();
+     * }
+     * }
+     * 
+     * bfs(root.left);
+     * }
+     */
 
+    // solution 2
     public Node connect(Node root) {
-        if (root == null) {
-            return null;
+        if (root == null || root.left == null) {
+            return root;
         }
-        this.dq = new ArrayDeque<>();
-        dq.add(root);
+        root.left.next = root.right;
+        if (root.next != null) {
+            root.right.next = root.next.left;
+        }
+        connect(root.left);
+        connect(root.right);
 
-        bfs(root);
         return root;
-    }
-
-    void bfs(Node root) {
-        if (root == null) {
-            return;
-        }
-        int len = dq.size();
-        for (int i = 0; i < len; i++) {
-            Node n = dq.poll();
-            if (n.left != null) {
-                dq.add(n.left);
-                dq.add(n.right);
-            }
-            if (i < len - 1) {
-                n.next = dq.peek();
-            }
-        }
-
-        bfs(root.left);
     }
 }
 // @lc code=end
