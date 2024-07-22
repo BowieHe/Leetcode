@@ -10,48 +10,53 @@ import java.util.ArrayList;
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
  * }
  */
 class Solution {
+
     List<TreeNode> res;
-    TreeNode curRoot;
+
     public List<TreeNode> generateTrees(int n) {
         res = new ArrayList<>();
-        if(n == 0) return res;
+
         return build(1, n);
     }
 
-    List<TreeNode> build(int lo, int hi) {
+    List<TreeNode> build(int left, int right) {
         List<TreeNode> res = new ArrayList<>();
-
-        if(lo > hi) {
+        if (left > right) {
             res.add(null);
             return res;
         }
-        for(int i = lo; i <= hi; i++) {
-            List<TreeNode> leftTree = build(lo, i - 1);
-            List<TreeNode> rightTree = build(i + 1, hi);
-            for(TreeNode left: leftTree) {
-                for(TreeNode right: rightTree) {
+
+        for (int i = left; i <= right; i++) {
+            List<TreeNode> leftNodes = build(left, i - 1);
+            List<TreeNode> rightNodes = build(i + 1, right);
+
+            for (TreeNode l : leftNodes) {
+                for (TreeNode r : rightNodes) {
                     TreeNode root = new TreeNode(i);
-                    root.left = left;
-                    root.right = right;
+                    root.left = l;
+                    root.right = r;
+
                     res.add(root);
                 }
             }
         }
+
+        System.out.println("left:" + left + " and right:" + right + " and res size: " + res.size());
         return res;
+
     }
 }
 // @lc code=end
-
