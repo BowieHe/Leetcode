@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.tree.TreeNode;
 
@@ -11,36 +13,45 @@ import javax.swing.tree.TreeNode;
 
 // @lc code=start
 class Solution {
-    int[][] memo;
+
+    List<TreeNode> r;
+    Map<Integer, Integer> m;
 
     public int numTrees(int n) {
-        memo = new int[n + 1][n + 1];
-        if(n == 0) return 0;
-        return build(1, n);
-        // return res.size();
+        if (n == 0) {
+            return 0;
+        }
+        m = new HashMap<>();
+        return b(1, n);
+        // r = build(1, n);
+        // return r.size();
     }
 
-    Integer build(int lo, int hi) {
-        int res = 0;
+    int b(int left, int right) {
 
-        if(lo > hi) {
+        int k = left * 100 + right;
+
+        if (left > right) {
             return 1;
         }
-        if(memo[lo][hi] != 0) {
-            return memo[lo][hi];
+
+        if (m.containsKey(k)) {
+            return m.get(k);
         }
 
-        for(int i = lo; i <= hi; i++) {
+        int res = 0;
 
-            int leftTree = build(lo, i - 1);
+        for (int i = left; i <= right; i++) {
 
-            int rightTree = build(i + 1, hi);
-            System.out.println(String.format("val:%d, left:%d, right: %d", i , leftTree, rightTree));
-            res += (leftTree * rightTree);
+            int l = b(left, i - 1);
+            int r = b(i + 1, right);
+
+            res += l * r;
         }
-        memo[lo][hi] = res;
+
+        m.put(k, res);
+
         return res;
     }
 }
 // @lc code=end
-
