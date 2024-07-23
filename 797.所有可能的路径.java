@@ -1,6 +1,9 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Queue;
 
 /*
  * @lc app=leetcode.cn id=797 lang=java
@@ -10,37 +13,36 @@ import java.util.List;
 
 // @lc code=start
 class Solution {
-    int len;
-    List<List<Integer>> res;
+
+    // bfs
     public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
-        len = graph.length;
-        res = new ArrayList<>();
-        if(len == 0) {
-            return new ArrayList<>();
+        Queue<List<Integer>> queue = new LinkedList<>();
+        List<List<Integer>> res = new ArrayList<>();
+
+        int size = graph.length;
+
+        queue.offer(List.of(0));
+        while (!queue.isEmpty()) {
+            int len = queue.size();
+            for (int i = 0; i < len; i++) {
+                List<Integer> q = queue.poll();
+
+                int last = q.get(q.size() - 1);
+                if (last == size - 1) {
+                    res.add(q);
+                    continue;
+                }
+
+                int[] nums = graph[last];
+                for (int num : nums) {
+                    List<Integer> cur = new ArrayList<>(q);
+                    cur.add(num);
+                    queue.offer(cur);
+                }
+            }
         }
-        LinkedList paths = new LinkedList();
-        paths.addFirst(0);
-        findPath(graph, 0, len - 1, paths);
+
         return res;
-    }
-
-    void findPath(int[][] graph, int start, int end, LinkedList<Integer> paths) {
-
-        if(start == end) {
-            
-            res.add(new LinkedList<>(paths));
-            paths.removeLast();
-            return;
-        }
-
-        int[] current = graph[start];
-        for(int pos: current) {
-            paths.addLast(pos);
-            System.out.println(String.format("get pos %d, %s", pos, paths.toString()));
-            findPath(graph, pos, end, paths);
-        }
-        paths.removeLast();
     }
 }
 // @lc code=end
-
