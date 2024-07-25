@@ -1,5 +1,6 @@
 import java.beans.Visibility;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /*
@@ -10,53 +11,49 @@ import java.util.LinkedList;
 
 // @lc code=start
 class Solution {
-    boolean[] visited;
-    boolean[] paths;
-    boolean hasCircle;
 
     public boolean canFinish(int numCourses, int[][] prerequisites) {
-        List<Integer>[] graph = buildGraph(numCourses, prerequisites);
-        visited = new boolean[numCourses];
-        paths = new boolean[numCourses];
-        hasCircle = false;
-
-        for(int i = 0; i < numCourses; i++) {
-            traverse(i, graph);
+        // ArrayList<Integer>[] graph = new ArrayList[nunumCourses];
+        ArrayList<Integer>[] graph = new ArrayList[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            graph[i] = new ArrayList<>();
         }
-        return !hasCircle;
+
+        for (int[] req : prerequisites) {
+            graph[req[0]].add(req[1]);
+        }
+
+        // 0 nerver been to, 1 searching, 2 finished
+        int[] route = new int[numCourses];
+        Arrays.fill(route, 0);
+        boolean valid = true;
+        for (int i = 0; i < numCourses && valid; i++) {
+            valid = dfs(graph, i, route);
+        }
+
+        return valid;
     }
 
-    void traverse(int level, List<Integer>[] graph) {
-        if(paths[level]) {
-            hasCircle = true;
+    boolean dfs(List<Integer>[] graph, int index, int[] route) {
+        if (route[index] == 2) {
+            return true;
+        } else if (route[index] == 1) {
+            return false;
         }
 
-        if(visited[level] || hasCircle) {
-            return ;
-        }
-        //前序遍历
-        paths[level] = true;
-        visited[level] = true;
-        for(int n: graph[level]) {
-            traverse(n, graph);
-        }
-        //后序遍历
-        paths[level] = false;
-    }
+        route[index] = 1;
+        List<Integer> nums = graph[index];
+        for (int num : nums) {
+            if (!dfs(graph, num, route)) {
+                return false;
+            }
 
-    List<Integer>[] buildGraph(int numCourses, int[][] prerequisites) {
-        List<Integer>[] graph = new LinkedList[numCourses];
-        for(int i = 0; i < numCourses; i++) {
-            graph[i] = new LinkedList();
         }
 
-        for(int[] requists: prerequisites) {
-            int from = requists[0];
-            int to = requists[1];
-            graph[from].add(to);
-        }
-        return graph;
+        route[index] = 2;
+
+        return true;
+
     }
 }
 // @lc code=end
-
