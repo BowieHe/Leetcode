@@ -1,4 +1,3 @@
-import java.beans.Visibility;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -53,7 +52,6 @@ class Solution {
         route[index] = 2;
 
         return true;
-
     }
 }
 // @lc code=end
