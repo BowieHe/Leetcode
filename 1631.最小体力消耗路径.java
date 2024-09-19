@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -11,75 +14,160 @@ import java.util.Queue;
 
 // @lc code=start
 class Solution {
-    int m, n;
+
     public int minimumEffortPath(int[][] heights) {
-        m = heights.length;
-        n = heights[0].length;
-
-        Queue<State> pq = new PriorityQueue<>((a, b) -> {
-            return a.distance - b.distance;
-        });
-
-        int[][] effort = new int[m][n];
-        for(int i = 0; i < m; i++) {
-            Arrays.fill(effort[i], Integer.MAX_VALUE);
-        }
-        effort[0][0] = 0;
-
-        pq.offer(new State(0, 0, 0));
-        while(!pq.isEmpty()) {
-            State curNode = pq.poll();
-            int x = curNode.x;
-            int y = curNode.y;
-            System.out.println("curNum " + pq.size());
-            System.out.println("process " + x + " and y " + y + " and " + curNode.distance);
-            if(curNode.x == m - 1 && curNode.y == n - 1) {
-                return curNode.distance;
-            }
-
-            if(effort[x][y] < curNode.distance) {
-                continue;
-            }
-
-            for(int[] node: nextNodes(x, y)) {
-                int nodeX = node[0];
-                int nodeY = node[1];
-                int e = Math.max(effort[x][y], Math.abs(heights[x][y] - heights[nodeX][nodeY]));
-                // System.out.println("process x" + x + "y" + y + "e" + e + "nodex" + nodeX + "nodeY" + nodeY);
-                if(e < effort[nodeX][nodeY]) {
-                    pq.offer(new State(nodeX, nodeY, e));
-                    effort[nodeX][nodeY] = e;
+        int m = heights.length, n = heights[0].length;
+        List<int[]> edges = new ArrayList<int[]>();
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                int id = i * n + j;
+                if (i > 0) {
+                    edges.add(new int[] { id - n, id, Math.abs(heights[i][j] - heights[i - 1][j]) });
+                }
+                if (j > 0) {
+                    edges.add(new int[] { id - 1, id, Math.abs(heights[i][j] - heights[i][j - 1]) });
                 }
             }
         }
-        return -1;
+        Collections.sort(edges, new Comparator<int[]>() {
+            public int compare(int[] e1, int[] e2) {
+                return e1[2] - e2[2];
+            };
+        });
 
-    }
-
-    int[][] dirs = new int[][]{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-
-    List<int[]> nextNodes(int x, int y) {
-        List<int[]> nodes = new ArrayList<>();
-        for(int[] dir: dirs) {
-            int row = x + dir[0];
-            int column = y + dir[1];
-            if(row < 0 || row > m - 1 || column < 0 || column > n - 1) {
-                continue;
+        int res = 0;
+        UF uf = new UF(n * m);
+        for (int[] edge : edges) {
+            int x = edge[0], y = edge[1], v = edge[2];
+            uf.join(x, y);
+            if (uf.connect(0, m * n - 1)) {
+                res = v;
+                break;
             }
-            nodes.add(new int[]{row, column});
         }
-        return nodes;
-    }
-    class State {
-        int x, y;
-        int distance;
 
-        State(int x, int y, int distance) {
-            this.x = x;
-            this.y = y;
-            this.distance = distance;
+        return res;
+    }
+
+    class UF {
+        int[] size;
+        int[] parent;
+        int n;
+
+        UF(int n) {
+            this.n = n;
+            this.size = new int[n];
+            this.parent = new int[n];
+            Arrays.fill(this.size, 1);
+            for (int i = 0; i < n; i++) {
+                parent[i] = i;
+            }
+        }
+
+        public int find(int x) {
+            return parent[x] == x ? x : (parent[x] = find(parent[x]));
+        }
+
+        public boolean join(int x, int y) {
+            x = find(x);
+            y = find(y);
+            if (x == y) {
+                return false;
+            }
+            if (size[x] > size[y]) {
+                int temp = x;
+                x = y;
+                y = temp;
+            }
+            parent[x] = y;
+            size[y] += size[x];
+            return true;
+        }
+
+        public boolean connect(int x, int y) {
+            return find(x) == find(y);
         }
     }
+
+    /*
+     * public int minimumEffortPath(int[][] heights) {
+     * int m = heights.length, n = heights[0].length;
+     * 
+     * List<int[]> edges = new ArrayList<int[]>();
+     * for (int i = 0; i < m; i++) {
+     * for (int j = 0; j < n; j++) {
+     * int id = i * n + j;
+     * if (i > 0) {
+     * edges.add(new int[] { id - n, id, Math.abs(heights[i][j] - heights[i - 1][j])
+     * });
+     * }
+     * 
+     * if (j > 0) {
+     * edges.add(new int[] { id - 1, id, Math.abs(heights[i][j] - heights[i][j - 1])
+     * });
+     * }
+     * }
+     * }
+     * 
+     * Collections.sort(edges, new Comparator<int[]>() {
+     * public int compare(int[] e1, int[] e2) {
+     * return e1[2] - e2[2];
+     * }
+     * });
+     * 
+     * UF uf = new UF(n * m);
+     * 
+     * int ans = 0;
+     * for (int[] edge : edges) {
+     * int x = edge[0], y = edge[1], z = edge[2];
+     * uf.join(x, y);
+     * if (uf.connect(0, m * n - 1)) {
+     * ans = z;
+     * break;
+     * }
+     * }
+     * return ans;
+     * }
+     * }
+     * 
+     * class UF {
+     * int[] size;
+     * int[] parent;
+     * int n;
+     * 
+     * UF(int n) {
+     * this.n = n;
+     * this.size = new int[n];
+     * this.parent = new int[n];
+     * Arrays.fill(this.size, 1);
+     * for (int i = 0; i < n; ++i) {
+     * parent[i] = i;
+     * }
+     * }
+     * 
+     * public int find(int x) {
+     * return parent[x] == x ? x : (parent[x] = find(parent[x]));
+     * }
+     * 
+     * public boolean join(int x, int y) {
+     * x = find(x);
+     * y = find(y);
+     * if (x == y) {
+     * return false;
+     * }
+     * if (size[x] < size[y]) {
+     * int temp = x;
+     * x = y;
+     * y = temp;
+     * }
+     * parent[y] = x;
+     * size[x] += size[y];
+     * return true;
+     * }
+     * 
+     * public boolean connect(int x, int y) {
+     * return find(x) == find(y);
+     * }
+     */
 }
 // @lc code=end
-
