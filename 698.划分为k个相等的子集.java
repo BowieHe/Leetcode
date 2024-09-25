@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,59 +13,34 @@ import java.util.Map;
 // @lc code=start
 class Solution {
     public boolean canPartitionKSubsets(int[] nums, int k) {
-        int sum = 0;
-        for(int n: nums) {
-            sum += n;
-        }
-        if(sum % k > 0) {
+        int sum = Arrays.stream(nums).sum();
+        if (nums.length < k || sum % k != 0)
             return false;
-        }
-        sum = sum / k;
-        int used = 0;
-        int[] bucket = new int[k + 1];
-        Arrays.sort(nums);
-        return backtrace(k, nums, sum, 0, used, bucket);
+        int target = sum / k;
+        Integer[] array = Arrays.stream(nums).boxed().toArray(Integer[]::new);
+        Arrays.sort(array, Collections.reverseOrder());
+
+        return backtrace(array, 0, new int[k], k, target);
     }
 
-    Map<Integer, Boolean> memo = new HashMap<Integer, Boolean>();
-    boolean backtrace(int k, int[] nums, int target, int start, int used, int[] bucket) {
-        if(k == 0) {
+    public boolean backtrace(Integer[] nums, int index, int[] bucket, int k, int target) {
+
+        if (index == nums.length)
             return true;
-        }
-
-        if(bucket[k] == target) {
-            boolean res = backtrace(k - 1, nums, target, 0, used, bucket);
-            memo.put(used, res);
-            return res;
-        }
-
-        if(memo.containsKey(used)) {
-            return memo.get(used);
-        }
-
-        for(int i = start; i < nums.length; i++) {
-            if(((used >> i) & 1) == 1) {
+        for (int i = 0; i < k; i++) {
+            if (i > 0 && bucket[i] == bucket[i - 1])
                 continue;
-            }
-            if((bucket[k] + nums[i]) > target) {
-                while(i + 1 < nums.length && nums[i + 1] == nums[i]) {
-                    i++;
-                }
+            if (bucket[i] + nums[index] > target)
                 continue;
-            }
 
-            used |= (1 << i);
-            bucket[k] += nums[i];
-            if(backtrace(k, nums, target, i, used, bucket)) {
+            bucket[i] += nums[index];
+
+            if (backtrace(nums, index + 1, bucket, k, target))
                 return true;
-            }
 
-            used ^= (1 << i);
-            bucket[k] -= nums[i];
+            bucket[i] -= nums[index];
         }
-
         return false;
     }
 }
 // @lc code=end
-

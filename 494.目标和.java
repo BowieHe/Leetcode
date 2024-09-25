@@ -1,3 +1,4 @@
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,29 +11,26 @@ import java.util.Map;
 // @lc code=start
 class Solution {
     public int findTargetSumWays(int[] nums, int target) {
-        if(nums.length == 0) {
+        int sum = Arrays.stream(nums).sum();
+        if (sum < target || (sum - target) % 2 != 0)
             return 0;
-        }
-        return dp(nums, target, 0);
-    }
+        int t = (sum - target) / 2;
 
-    Map<String, Integer> memo = new HashMap<String, Integer>();
+        int[][] dp = new int[nums.length + 1][t + 1];
+        dp[0][0] = 1;
 
-    int dp(int[] nums, int remains, int index) {
-        System.out.println("process index " + index + " remains " + remains);
-        if(index == nums.length) {
-            return remains == 0? 1: 0;
+        for (int i = 1; i <= nums.length; i++) {
+            int n = nums[i - 1];
+            for (int j = 0; j <= t; j++) {
+
+                dp[i][j] = dp[i - 1][j];
+                if (j >= n) {
+                    dp[i][j] += dp[i - 1][j - n];
+                }
+            }
         }
 
-        String key = index + "," + remains;
-        if(memo.containsKey(key)) {
-            return memo.get(key);
-        }
-       
-        int result = dp(nums, remains - nums[index], index + 1) + dp(nums, remains + nums[index], index + 1);
-        memo.put(key, result);
-        return result;
+        return dp[nums.length][t];
     }
 }
 // @lc code=end
-
